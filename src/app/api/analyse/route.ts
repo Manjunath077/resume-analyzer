@@ -1,32 +1,45 @@
 import { NextResponse } from "next/server";
+import { testLLMConnection } from "@/lib/llm/llm.connection";
+import { sampleResume, sampleJD } from "@/mocks/sample-data";
+import { LLM_MODEL, TROUBLESHOOTING_STEPS } from "@/lib/llm/llm.constants";
+import { LLMService } from "@/lib/llm/llm.services";
 
-export async function POST(req: Request) {
+export async function GET() {
   try {
-    const body = await req.json();
+    const connectionTest = await testLLMConnection();
 
-    const { resumeText, jd } = body;
-
-    if (!resumeText || !jd) {
+    if (!connectionTest.success) {
       return NextResponse.json(
-        { success: false, message: "Resume and JD required" },
-        { status: 400 }
+        {
+          success: false,
+          error: connectionTest.message,
+          troubleshooting: TROUBLESHOOTING_STEPS,
+        },
+        { status: 503 }
       );
     }
 
-    // Mock AI result (temporary)
-    const mockScore = Math.floor(Math.random() * 40) + 60;
+    const llm = new LLMService();
+    const analysis = await llm.analyzeResume(sampleResume, sampleJD);
 
+    return NextResponse.json({
+      success: true,
+      message: "Groq integration is working!",
+      connection: connectionTest.message,
+      model: LLM_MODEL,
+      sample_analysis: analysis,
+    });
+
+  } catch (error: any) {
     return NextResponse.json(
       {
-        success: true,
-        score: mockScore,
-        feedback: "This resume matches the job description moderately well.",
+        success: false,
+        error: error.message,
+        stack:
+          process.env.NODE_ENV === "development"
+            ? error.stack
+            : undefined,
       },
-      { status: 200 }
-    );
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, message: "Analysis failed" },
       { status: 500 }
     );
   }
