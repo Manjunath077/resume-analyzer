@@ -1,13 +1,19 @@
-import React from 'react'
-import { ThemeToggle } from './theme-toggle'
-import Image from 'next/image'
+import Link from "next/link";
+import SignIn from "./auth/SignIn";
 
 const Navbar = () => {
     return (
-        <div className='flex justify-end items-center p-2 bg-background text-foreground'>
-            <ThemeToggle />
-        </div>
-    )
-}
+        <nav className="flex justify-between items-center px-6 py-4 border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
 
-export default Navbar
+            {/* Logo */}
+            <Link href="/" className="text-xl font-bold text-gray-800">
+                ResumeAnalyzer
+            </Link>
+
+            {/* Auth Section */}
+            <SignIn />
+        </nav>
+    );
+};
+
+export default Navbar;

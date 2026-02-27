@@ -14,7 +14,7 @@ export async function GET() {
           success: false,
           error: connectionTest.message,
           troubleshooting: TROUBLESHOOTING_STEPS,
-        },
+        },  
         { status: 503 }
       );
     }
