@@ -15,13 +15,13 @@ export default function HomePage() {
     }, [status, router]);
 
     return (
-        <main className="flex flex-col items-center justify-center min-h-screen text-center px-6">
+        <div className="flex flex-col items-center justify-center min-h-screen text-center px-6">
             <h1 className="text-4xl font-bold mb-4">
                 AI Powered Resume Analyzer
             </h1>
             <p className="text-gray-600 mb-8">
                 Upload your resume and get instant AI feedback, ATS score, and improvement suggestions.
             </p>
-        </main>
+        </div>
     );
 }
