@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { testLLMConnection } from "@/lib/llm/llm.connection";
 import { sampleResume, sampleJD } from "@/mocks/sample-data";
 import { LLM_MODEL, TROUBLESHOOTING_STEPS } from "@/lib/llm/llm.constants";
-import { LLMService } from "@/lib/llm/llm.services";
+import { LLMService } from "@/services/llm.services";
 
 export async function GET() {
   try {

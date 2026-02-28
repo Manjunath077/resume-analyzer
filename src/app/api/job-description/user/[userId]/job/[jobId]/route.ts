@@ -36,10 +36,10 @@ function toDTO(doc: any) {
  */
 export async function GET(
     req: NextRequest,
-    { params }: { params: { userId: string; jobId: string } }
+    { params }: { params: Promise<{ userId: string; jobId: string }> }
 ) {
     try {
-        const { userId, jobId } = params;
+        const { userId, jobId } = await params;
 
         const service = await JDService.create();
         const jd = await service.findById(userId, jobId);
@@ -48,7 +48,8 @@ export async function GET(
             return failure('Job description not found', 404);
         }
 
-        return success(toDTO(jd));
+        // return success(toDTO(jd));
+        return NextResponse.json(toDTO(jd), { status: 200 });
 
     } catch (error) {
         console.error('GET JD BY ID Error:', error);
@@ -61,10 +62,10 @@ export async function GET(
  */
 export async function PUT(
     req: NextRequest,
-    { params }: { params: { userId: string; jobId: string } }
+    { params }: { params: Promise<{ userId: string; jobId: string }> }
 ) {
     try {
-        const { userId, jobId } = params;
+        const { userId, jobId } = await params;
 
         const body = await req.json();
         const validatedData = JobDescriptionUpdateSchema.parse(body);
@@ -76,7 +77,8 @@ export async function PUT(
             return failure('Job description not found', 404);
         }
 
-        return success(toDTO(updated));
+        // return success(toDTO(updated));
+        return NextResponse.json(toDTO(updated), { status: 200 });
 
     } catch (error) {
         if (error instanceof ZodError) {
@@ -93,10 +95,10 @@ export async function PUT(
  */
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: { userId: string; jobId: string } }
+    { params }: { params: Promise<{ userId: string; jobId: string }> }
 ) {
     try {
-        const { userId, jobId } = params;
+        const { userId, jobId } = await params;
 
         const service = await JDService.create();
         const deleted = await service.deleteJD(userId, jobId);
@@ -105,7 +107,7 @@ export async function DELETE(
             return failure('Job description not found', 404);
         }
 
-        return success({ message: 'Deleted successfully' });
+        return NextResponse.json({ message: 'Deleted successfully' }, { status: 200 });
 
     } catch (error) {
         console.error('DELETE JD Error:', error);

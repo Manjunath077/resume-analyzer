@@ -45,11 +45,35 @@ export const IdParamSchema = z.object({
 // Schema for query parameters (pagination, filtering)
 export const JobDescriptionQuerySchema = z.object({
     page: z.coerce.number().min(0).default(0),
-    size: z.coerce.number().min(1).max(100).default(10),
-    search: z.string().optional(),
-    sortBy: z.enum(['createdAt', 'position', 'updatedAt']).default('createdAt'),
-    sortOrder: z.enum(['asc', 'desc']).default('desc'),
-    includeStats: z.coerce.boolean().default(true)
+    size: z.coerce.number().min(1).default(10),
+    search: z.string().optional().nullable().default(null),
+    sortBy: z.preprocess(
+        (val) => {
+            if (val === null || val === undefined || val === '') {
+                return 'createdAt';
+            }
+            return val;
+        },
+        z.enum(['createdAt', 'position', 'updatedAt'])
+    ),
+    sortOrder: z.preprocess(
+        (val) => {
+            if (val === null || val === undefined || val === '') {
+                return 'desc';
+            }
+            return val;
+        },
+        z.enum(['asc', 'desc'])
+    ),
+    includeStats: z.preprocess(
+        (val) => {
+            if (val === null || val === undefined) {
+                return undefined;
+            }
+            return val === 'true';
+        },
+        z.boolean().optional()
+    )
 });
 
 export type CreateJobDescriptionInput = z.infer<typeof JobDescriptionSchema>;

@@ -39,10 +39,10 @@ function toDTO(doc: any) {
  */
 export async function GET(
     req: NextRequest,
-    { params }: { params: { userId: string } }
+    { params }: { params: Promise<{ userId: string }> }
 ) {
     try {
-        const userId = params.userId;
+        const { userId } = await params;
 
         const { searchParams } = new URL(req.url);
 
@@ -59,10 +59,13 @@ export async function GET(
 
         const result = await service.findAll(userId, query);
 
-        return success({
-            ...result,
-            content: result.content.map(toDTO)
-        });
+        return NextResponse.json(
+            {
+                ...result,
+                content: result.content.map(toDTO)
+            },
+            { status: 200 }
+        );
 
     } catch (error) {
         if (error instanceof ZodError) {
@@ -80,10 +83,10 @@ export async function GET(
  */
 export async function POST(
     req: NextRequest,
-    { params }: { params: { userId: string } }
+    { params }: { params: Promise<{ userId: string }> }
 ) {
     try {
-        const userId = params.userId;
+        const { userId } = await params;
 
         const body = await req.json();
         const validatedData = JobDescriptionSchema.parse(body);
@@ -91,7 +94,7 @@ export async function POST(
         const service = await JDService.create();
         const created = await service.createJD(userId, validatedData);
 
-        return success(toDTO(created), 201);
+        return NextResponse.json(toDTO(created), { status: 201 });
 
     } catch (error) {
         if (error instanceof ZodError) {
