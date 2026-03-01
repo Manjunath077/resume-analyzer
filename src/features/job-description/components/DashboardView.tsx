@@ -49,6 +49,9 @@ import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import CreateJobDescription from './CreateJobDescription'
 import EditJobDescription from './EditJobDescription'
+import { IoMdListBox } from 'react-icons/io'
+import { FaUsers } from 'react-icons/fa'
+import { PiMedalFill } from 'react-icons/pi'
 
 interface ExperienceRequired {
     minYears: number;
@@ -109,6 +112,7 @@ const DashboardView = () => {
     }
 
     const formatDate = (dateString: string) => {
+        if (!dateString) return 'Unknown date'
         return new Date(dateString).toLocaleDateString('en-US', {
             month: 'short',
             day: 'numeric',
@@ -117,6 +121,7 @@ const DashboardView = () => {
     }
 
     const getInitials = (position: string) => {
+        if (!position) return 'JD'
         return position
             .split(' ')
             .map(word => word[0])
@@ -126,7 +131,7 @@ const DashboardView = () => {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 px-4 py-6">
             {/* Header with Create Button */}
             <div className="flex items-center justify-between">
                 <div>
@@ -189,7 +194,7 @@ const DashboardView = () => {
                     </div>
                 </div>
             ) : error ? (
-                <Card className="border-red-200 bg-red-50">
+                <Card className="border-none shadow-none">
                     <CardContent className="pt-6">
                         <div className="text-center text-red-600">
                             <p className="text-lg font-semibold mb-2">Error Loading Dashboard</p>
@@ -205,7 +210,7 @@ const DashboardView = () => {
                     </CardContent>
                 </Card>
             ) : !data || data.content.length === 0 ? (
-                <Card className="border-dashed">
+                <Card className="border-none shadow-none">
                     <CardContent className="pt-12 pb-12">
                         <div className="text-center space-y-4">
                             <div className="flex justify-center">
@@ -225,13 +230,13 @@ const DashboardView = () => {
                     </CardContent>
                 </Card>
             ) : (
-                <div>
+                <div className='space-y-4 '>
                     {/* Stats Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <Card>
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0">
                                 <CardTitle className="text-sm font-medium">Total JDs</CardTitle>
-                                <Briefcase className="h-4 w-4 text-muted-foreground" />
+                                <IoMdListBox size={30} color='orange' />
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">{data?.stats?.totalJDs}</div>
@@ -244,7 +249,7 @@ const DashboardView = () => {
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Total Resumes</CardTitle>
-                                <Users className="h-4 w-4 text-muted-foreground" />
+                                <FaUsers size={30} color='skyblue' />
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">{data?.stats?.totalResumes}</div>
@@ -257,7 +262,7 @@ const DashboardView = () => {
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Average Match</CardTitle>
-                                <Target className="h-4 w-4 text-muted-foreground" />
+                                <Target size={30} color='green' />
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">{data?.stats?.averageScore}%</div>
@@ -268,7 +273,7 @@ const DashboardView = () => {
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Strong Matches</CardTitle>
-                                <Award className="h-4 w-4 text-muted-foreground" />
+                                <PiMedalFill size={30} color='gold' />
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">{data?.stats.strongMatches}</div>
@@ -283,7 +288,7 @@ const DashboardView = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {data?.content?.map((job) => (
                             <Card key={job._id} className="hover:shadow-lg transition-shadow">
-                                <CardHeader className="pb-3">
+                                <CardHeader className="pb-1">
                                     <div className="flex items-start justify-between">
                                         <div className="flex items-center gap-3">
                                             <Avatar className="h-10 w-10 bg-primary/10">
@@ -324,7 +329,7 @@ const DashboardView = () => {
                                         </div>
                                     </div>
                                 </CardHeader>
-                                <CardContent className="space-y-3">
+                                <CardContent className="space-y-2">
                                     {/* Experience */}
                                     <div className="flex items-center gap-2 text-sm">
                                         <Briefcase className="h-4 w-4 text-muted-foreground" />
@@ -375,9 +380,6 @@ const DashboardView = () => {
                                             <FileText className="h-4 w-4 text-muted-foreground" />
                                             <span>Updated {formatDate(job.updatedAt)}</span>
                                         </div>
-                                        <Badge variant="outline" className="ml-auto">
-                                            ID: {job._id.slice(-6)}
-                                        </Badge>
                                     </div>
                                 </CardFooter>
                             </Card>
@@ -386,10 +388,8 @@ const DashboardView = () => {
                 </div>
             )}
 
-
-
             <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-                <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                <DialogContent className="min-w-3xl max-w-5xl max-h-[85vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>Create Job Description</DialogTitle>
                         <DialogDescription>
@@ -409,7 +409,7 @@ const DashboardView = () => {
 
             {/* Edit Dialog */}
             <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-                <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                <DialogContent className="min-w-3xl max-w-5xl max-h-[85vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>Edit Job Description</DialogTitle>
                         <DialogDescription>
@@ -439,21 +439,26 @@ const DashboardView = () => {
                             <Trash2 className="h-5 w-5" />
                             Delete Job Description
                         </AlertDialogTitle>
-                        <AlertDialogDescription className="space-y-2">
-                            <p className="font-medium text-foreground">
-                                This action cannot be undone.
-                            </p>
-                            <p>
-                                Deleting this job description will also permanently remove:
-                            </p>
-                            <ul className="list-disc pl-6 space-y-1 text-sm">
-                                <li>All resumes analyzed for this position</li>
-                                <li>Candidate match scores and analysis results</li>
-                                <li>Statistics and insights associated with this JD</li>
-                            </ul>
-                            <p className="mt-4 text-sm font-medium">
-                                Are you sure you want to proceed?
-                            </p>
+                        <AlertDialogDescription asChild>
+                            <div className="space-y-2">
+                                <p className="font-medium text-foreground">
+                                    This action cannot be undone.
+                                </p>
+
+                                <p>
+                                    Deleting this job description will also permanently remove:
+                                </p>
+
+                                <ul className="list-disc pl-6 space-y-1 text-sm">
+                                    <li>All resumes analyzed for this position</li>
+                                    <li>Candidate match scores and analysis results</li>
+                                    <li>Statistics and insights associated with this JD</li>
+                                </ul>
+
+                                <p className="mt-4 text-sm font-medium">
+                                    Are you sure you want to proceed?
+                                </p>
+                            </div>
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

@@ -1,10 +1,17 @@
 'use client';
 
+import { LogIn, LogOut } from 'lucide-react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import React from 'react';
-import { LogOut, LogIn, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const SignIn = () => {
     const { data: session, status } = useSession();
@@ -12,47 +19,55 @@ const SignIn = () => {
 
 
     return (
-        <div className="flex items-center">
+        <div className="flex items-center ">
             {status === "authenticated" && session?.user ? (
-                <div className="flex items-center gap-4 bg-white border border-gray-200 px-4 py-2 rounded-xl shadow-sm hover:shadow-md transition">
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <button className="focus:outline-none">
+                            {session.user.image && (
+                                <Image
+                                    src={session.user.image}
+                                    alt={session.user.name || 'Profile'}
+                                    width={40}
+                                    height={40}
+                                    className="rounded-full ring-2 ring-gray-200 hover:ring-gray-300 transition cursor-pointer"
+                                />
+                            )}
+                        </button>
+                    </DropdownMenuTrigger>
 
-                    {session.user.image && (
-                        <Image
-                            src={session.user.image}
-                            alt={session.user.name || 'Profile'}
-                            width={36}
-                            height={36}
-                            className="rounded-full ring-2 ring-gray-200"
-                        />
-                    )}
+                    <DropdownMenuContent align="end" className="w-64">
+                        <DropdownMenuLabel>
+                            <div className="flex flex-col space-y-1">
+                                <p className="text-sm font-medium leading-none">{session.user.name}</p>
+                                <p className="text-xs leading-none text-muted-foreground">
+                                    {session.user.email}
+                                </p>
+                            </div>
+                        </DropdownMenuLabel>
 
-                    <div className="flex flex-col leading-tight">
-                        <span className="text-sm font-semibold text-gray-800">
-                            {session.user.name}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                            {session.user.email}
-                        </span>
-                    </div>
+                        <DropdownMenuSeparator />
 
-                    <button
-                        onClick={async () => {
-                            await signOut({ redirect: false });
-                            router.replace("/");
-                        }}
-                        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition"
-                    >
-                        <LogOut size={16} />
-                        Sign Out
-                    </button>
-                </div>
+                        <DropdownMenuItem
+                            onClick={async () => {
+                                await signOut({ redirect: false });
+                                router.replace("/");
+                            }}
+                            className="text-red-600 cursor-pointer"
+                        >
+                            <LogOut className="mr-2 h-4 w-4" />
+                            <span>Sign Out</span>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             ) : (
+                // Sign in button remains the same
                 <button
                     onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-                    className="flex items-center gap-3 px-5 py-2.5 bg-white border border-gray-300 rounded-xl shadow-sm hover:shadow-md hover:bg-gray-50 transition font-medium text-gray-700"
+                    className="flex items-center gap-3 px-5 py-2.5 bg-white border border-gray-300 rounded-xl shadow-sm hover:shadow-md hover:bg-gray-50 transition font-medium text-gray-700 cursor-pointer"
                 >
                     <LogIn size={18} />
-                    Sign in with Google
+                    Sign In
                 </button>
             )}
         </div>

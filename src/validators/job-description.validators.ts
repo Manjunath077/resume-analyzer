@@ -31,7 +31,7 @@ export const JobDescriptionSchema = z.object({
     niceToHaveSkills: z.array(z.string().min(1)).optional(),
     niceToHaveQualifications: z.array(z.string().min(1)).optional(),
     responsibilities: z.array(z.string().min(1)).min(1, "At least one responsibility is needed"),
-    stats: StatisticsSchema
+    stats: StatisticsSchema.optional()
 });
 
 // Schema for updating (all fields optional)

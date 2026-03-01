@@ -1,15 +1,17 @@
-import Link from "next/link";
+import Image from "next/image";
 import SignIn from "./auth/SignIn";
 
 const Navbar = () => {
     return (
-        <nav className="flex justify-between items-center px-6 py-4 border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
+        <nav className="flex justify-between items-center px-6 py-2 border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
 
             {/* Logo */}
-            <Link href="/" className="text-xl font-bold text-gray-800">
-                ResumeAnalyzer
-            </Link>
-
+            <Image
+                src={'/logo.png'}
+                alt={'Logo'}
+                width={100}
+                height={100}
+            />
             {/* Auth Section */}
             <SignIn />
         </nav>
