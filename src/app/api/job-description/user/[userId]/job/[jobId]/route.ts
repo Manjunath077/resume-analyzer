@@ -32,7 +32,7 @@ function toDTO(doc: any) {
 
 /**
  * GET by ID
- * /api/job-descriptions/user/{userId}/job/{jobId}
+ * /api/job-description/user/{userId}/job/{jobId}
  */
 export async function GET(
     req: NextRequest,

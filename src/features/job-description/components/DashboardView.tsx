@@ -52,6 +52,8 @@ import EditJobDescription from './EditJobDescription'
 import { IoMdListBox } from 'react-icons/io'
 import { FaUsers } from 'react-icons/fa'
 import { PiMedalFill } from 'react-icons/pi'
+import { useRouter } from 'next/navigation'
+import { encryptId } from '@/lib/utils/encryption'
 
 interface ExperienceRequired {
     minYears: number;
@@ -60,6 +62,8 @@ interface ExperienceRequired {
 
 const DashboardView = () => {
     const { data: session } = useSession()
+    const router = useRouter()
+
     const [data, setData] = useState<JobDescriptionResponse | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -128,6 +132,10 @@ const DashboardView = () => {
             .join('')
             .toUpperCase()
             .slice(0, 2)
+    }
+
+    const handleViewResumes = (jobId: string) => {
+        router.push(`/dashboard/resumes/${jobId}`)
     }
 
     return (
@@ -380,6 +388,12 @@ const DashboardView = () => {
                                             <FileText className="h-4 w-4 text-muted-foreground" />
                                             <span>Updated {formatDate(job.updatedAt)}</span>
                                         </div>
+                                        <Button
+                                            onClick={() => {
+                                                handleViewResumes(job._id)
+                                            }}
+                                            className='cursor-pointer'
+                                        >View Resumes</Button>
                                     </div>
                                 </CardFooter>
                             </Card>
