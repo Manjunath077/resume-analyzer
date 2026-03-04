@@ -5,7 +5,7 @@ import {
     UpdateJobDescriptionInput,
     JobDescriptionQuery
 } from '@/validators/job-description.validators';
-import { JOB_DESCRIPTIONS_COLLECTION } from '../lib/db/description.collection';
+import { JOB_DESCRIPTIONS_COLLECTION } from '../lib/db/job-description.collection';
 import { JobDescriptionDocument } from '@/lib/db/job-description.document';
 
 export class JDService {

@@ -1,61 +1,55 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import ResumeUploadForm from '@/components/ResumeUploadForm';
 import {
-  FiUpload,
-  FiDownload,
-  FiMail,
-  FiRefreshCw,
-  FiEye,
-  FiCheckCircle,
-  FiClock,
-  FiAlertCircle
-} from 'react-icons/fi';
-import { useParams } from 'next/navigation'
-import { useSession } from 'next-auth/react';
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/components/ui/table';
 import { apiClient } from '@/lib/api/axios';
 import { JobDescriptionDto } from '@/types/jod-description';
+import { PaginatedResponse } from '@/types/paginated-response';
+import { ResumeMetadataDto } from '@/types/resume';
+import { useSession } from 'next-auth/react';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import {
+  FiAlertCircle,
+  FiDownload,
+  FiEye,
+  FiMail,
+  FiTrash2,
+  FiUpload
+} from 'react-icons/fi';
+import { LuLoaderCircle } from 'react-icons/lu';
+import { TbAlertTriangleFilled } from "react-icons/tb";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import toast from 'react-hot-toast';
 
-const candidates = [
-  {
-    name: "John Doe",
-    score: 82,
-    experience: "5 Years",
-    skills: ["React", "Node.js"],
-    status: "Completed",
-    statusColor: "green"
-  },
-  {
-    name: "Jane Smith",
-    score: 76,
-    experience: "4 Years",
-    skills: ["JavaScript", "CSS"],
-    status: "Completed",
-    statusColor: "green"
-  },
-  {
-    name: "Mike Johnson",
-    score: 65,
-    experience: "3 Years",
-    skills: ["JavaScript", "Git"],
-    status: "Processing",
-    statusColor: "yellow"
-  },
-  {
-    name: "Lisa Brown",
-    score: "--",
-    experience: "Pending",
-    skills: [],
-    status: "Pending",
-    statusColor: "gray"
-  }
-];
 
 const JobResumesPage = () => {
   const { data: session } = useSession();
   const [jobData, setJobData] = useState<JobDescriptionDto | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [resumesData, setResumesData] = useState<PaginatedResponse<ResumeMetadataDto> | null>(null);
+  const [resumesLoading, setResumesLoading] = useState(true);
+  const [resumesError, setResumesError] = useState<string | null>(null);
+  const [isUploadSheetOpen, setIsUploadSheetOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedResume, setSelectedResume] = useState<ResumeMetadataDto | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const params = useParams()
   const jobId = params.id as string
 
@@ -79,6 +73,28 @@ const JobResumesPage = () => {
     fetchJobDetails();
   }, [session?.user?.id, jobId]);
 
+  useEffect(() => {
+    fetchResumesMetadata();
+  }, [jobId]);
+
+
+  const fetchResumesMetadata = async () => {
+    if (!jobId) return;
+
+    setResumesLoading(true);
+    setResumesError(null);
+
+    try {
+      const response = await apiClient.get(`/resumes/metadata?page=0&size=10&jobId=${jobId}`);
+      setResumesData(response.data);
+    } catch (err) {
+      setResumesError('Failed to fetch resumes data');
+      console.error('Error fetching resumes:', err);
+    } finally {
+      setResumesLoading(false);
+    }
+  };
+
   // Format job details from API
   const formattedJobDetails = jobData ? {
     title: jobData.position || "Frontend Developer",
@@ -99,27 +115,60 @@ const JobResumesPage = () => {
     niceToHaveQualifications: jobData.niceToHaveQualifications || []
   } : null;
 
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'Completed':
-        return <FiCheckCircle className="w-4 h-4 text-green-500" />;
-      case 'Processing':
-        return <FiRefreshCw className="w-4 h-4 text-yellow-500" />;
-      default:
-        return <FiClock className="w-4 h-4 text-gray-400" />;
+  const handleOpenUploadSheet = () => {
+    setIsUploadSheetOpen(true);
+  };
+
+  const handleCloseUploadSheet = () => {
+    setIsUploadSheetOpen(false);
+  };
+
+  const handleDeleteClick = (resume: ResumeMetadataDto) => {
+    setSelectedResume(resume);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedResume) return;
+
+    setIsDeleting(true);
+    const loadingToast = toast.loading('Deleting resume...');
+
+    try {
+      await apiClient.delete(`/resumes/metadata?resumeId=${selectedResume._id}`);
+
+      toast.dismiss(loadingToast);
+      toast.success('Resume deleted successfully!', {
+        duration: 5000,
+      });
+
+      // Refresh the resumes list
+      fetchResumesMetadata();
+
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      toast.error('Failed to delete resume. Please try again.', {
+        duration: 5000,
+      });
+      console.error('Delete error:', error);
+    } finally {
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setSelectedResume(null);
     }
   };
 
-  const getStatusColor = (color: string) => {
-    switch (color) {
-      case 'green':
-        return 'text-green-600 bg-green-50';
-      case 'yellow':
-        return 'text-yellow-600 bg-yellow-50';
-      default:
-        return 'text-gray-600 bg-gray-50';
-    }
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setSelectedResume(null);
   };
 
   return (
@@ -130,19 +179,13 @@ const JobResumesPage = () => {
         <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
           {loading ? (
             <div className="flex justify-center items-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <LuLoaderCircle className="animate-spin text-gray-500" />
               <span className="ml-3 text-gray-600">Loading job details...</span>
             </div>
           ) : error ? (
             <div className="text-center py-8">
-              <FiAlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
+              <TbAlertTriangleFilled className="w-12 h-12 text-red-500 mx-auto mb-3" />
               <p className="text-red-600">{error}</p>
-              <button
-                onClick={() => window.location.reload()}
-                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                Retry
-              </button>
             </div>
           ) : !jobData ? (
             <div className="text-center py-8">
@@ -232,7 +275,9 @@ const JobResumesPage = () => {
 
           {/* Action Buttons - Always visible */}
           <div className="flex items-center space-x-3">
-            <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            <button
+              onClick={handleOpenUploadSheet}
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
               <FiUpload className="w-4 h-4" />
               <span>Upload Resumes</span>
             </button>
@@ -245,6 +290,23 @@ const JobResumesPage = () => {
               <span>Import from Gmail</span>
             </button>
           </div>
+
+          {/* Upload Resume Dialog */}
+          <Sheet open={isUploadSheetOpen} onOpenChange={setIsUploadSheetOpen}>
+            <SheetContent side="right" className="w-full md:max-w-4xl">
+              <SheetHeader className='py-1'>
+                <SheetTitle>
+                  Upload Resumes for {formattedJobDetails?.title || "Job"}
+                </SheetTitle>
+              </SheetHeader>
+              <ResumeUploadForm
+                onClose={handleCloseUploadSheet}
+                onSuccess={() => {
+                  fetchResumesMetadata();
+                }}
+              />
+            </SheetContent>
+          </Sheet>
         </div>
 
         {/* Resume Summary Section */}
@@ -253,77 +315,136 @@ const JobResumesPage = () => {
             <h2 className="text-lg font-semibold text-gray-900">Resume Summary</h2>
           </div>
 
-          {/* Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Candidate
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Score
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Experience
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Skills Matched
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {candidates.map((candidate, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm font-medium text-gray-900">
-                        {candidate.name}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {candidate.score !== "--" ? (
-                        <span className="text-sm text-gray-900">{candidate.score}</span>
-                      ) : (
-                        <span className="text-sm text-gray-400">--</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm text-gray-900">{candidate.experience}</span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {candidate.skills.length > 0 ? (
-                        <span className="text-sm text-gray-900">
-                          {candidate.skills.join(', ')}
+          {/* Conditional rendering using ternary operators */}
+          {resumesLoading ? (
+            <div className="flex justify-center items-center py-12">
+              <LuLoaderCircle className="animate-spin text-gray-500" />
+              <span className="ml-3 text-gray-600">Loading resumes...</span>
+            </div>
+          ) : resumesError ? (
+            <div className="text-center py-12">
+              <FiAlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
+              <p className="text-red-600">{resumesError}</p>
+            </div>
+          ) : !resumesData?.content || resumesData.content.length === 0 ? (
+            <div className="text-center py-12">
+              <FiUpload className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+              <p className="text-gray-500">No resumes uploaded yet</p>
+              <button
+                onClick={handleOpenUploadSheet}
+                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Upload Your First Resume
+              </button>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-gray-50">
+                    <TableHead className="font-semibold">Candidate</TableHead>
+                    <TableHead className="font-semibold">Upload Status</TableHead>
+                    <TableHead className="font-semibold">Analysis Status</TableHead>
+                    <TableHead className="font-semibold">Uploaded On</TableHead>
+                    <TableHead className="font-semibold">Analysis</TableHead>
+                    <TableHead className="font-semibold">Action</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {resumesData.content.map((resume: any) => (
+                    <TableRow key={resume._id} className="hover:bg-gray-50">
+                      <TableCell className="font-medium p-5">
+                        {resume.candidateName || "Not specified"}
+                      </TableCell>
+                      <TableCell>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize
+                         ${resume.status === "completed"
+                            ? "bg-green-100 text-green-700"
+                            : resume.status === "uploaded"
+                              ? "bg-blue-100 text-blue-700"
+                              : resume.status === "failed"
+                                ? "bg-red-100 text-red-700"
+                                : "bg-gray-100 text-gray-700"
+                          }`}>
+                          {resume.status}
                         </span>
-                      ) : (
-                        <span className="text-sm text-gray-400">--</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        {getStatusIcon(candidate.status)}
-                        <span className={`ml-2 text-sm ${getStatusColor(candidate.statusColor)} px-2 py-1 rounded-full`}>
-                          {candidate.status}
+                      </TableCell>
+                      <TableCell>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize
+                        ${resume.analysisStatus === "processed"
+                            ? "bg-green-100 text-green-700"
+                            : resume.analysisStatus === "processing"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-gray-100 text-gray-700"
+                          }`}>
+                          {resume.analysisStatus?.replace('_', ' ') || "pending"}
                         </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <button className="flex items-center space-x-1 text-blue-600 hover:text-blue-800">
-                        <FiEye className="w-4 h-4" />
-                        <span className="text-sm">View</span>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                      </TableCell>
+                      <TableCell className="text-gray-600">
+                        {formatDate(resume.createdAt)}
+                      </TableCell>
+                      <TableCell>
+                        <button className="flex items-center space-x-1 text-blue-600 hover:text-blue-800 cursor-pointer">
+                          <FiEye className="w-4 h-4" />
+                          <span className="text-sm">View</span>
+                        </button>
+                      </TableCell>
+                      <TableCell>
+                        <button
+                          onClick={() => handleDeleteClick(resume)}
+                          className="flex items-center space-x-1 text-red-600 hover:text-red-800 cursor-pointer transition-colors"
+                          disabled={isDeleting}
+                        >
+                          <FiTrash2 className="w-4 h-4" />
+                        </button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+
+          {/* Delete Confirmation Dialog */}
+          <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-red-600 flex items-center gap-2">
+                  <FiAlertCircle className="w-5 h-5" />
+                  Confirm Deletion
+                </AlertDialogTitle>
+                <AlertDialogDescription className="pt-3">
+                  Are you sure you want to delete the resume for{' '}
+                  <span className="font-semibold text-gray-900">
+                    {selectedResume?.candidateName || 'this candidate'}
+                  </span>
+                  ? This action cannot be undone. The resume will be permanently removed from the system.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel
+                  onClick={handleDeleteCancel}
+                  disabled={isDeleting}
+                >
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDeleteConfirm}
+                  disabled={isDeleting}
+                  className="bg-red-600 hover:bg-red-700 text-white focus:ring-red-600"
+                >
+                  {isDeleting ? (
+                    <>
+                      <LuLoaderCircle className="animate-spin mr-2 h-4 w-4" />
+                      Deleting...
+                    </>
+                  ) : (
+                    'Delete Resume'
+                  )}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
     </div>
