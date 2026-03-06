@@ -13,7 +13,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-const SignIn = () => {
+const GoogleSignInButton = () => {
     const { data: session, status } = useSession();
     const router = useRouter();
 
@@ -74,4 +74,4 @@ const SignIn = () => {
     );
 };
 
-export default SignIn;
+export default GoogleSignInButton;

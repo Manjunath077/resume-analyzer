@@ -54,6 +54,7 @@ import { FaUsers } from 'react-icons/fa'
 import { PiMedalFill } from 'react-icons/pi'
 import { useRouter } from 'next/navigation'
 import { encryptId } from '@/lib/utils/encryption'
+import { LuLoaderCircle } from 'react-icons/lu'
 
 interface ExperienceRequired {
     minYears: number;
@@ -72,6 +73,7 @@ const DashboardView = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
     const [selectedJobId, setSelectedJobId] = useState<string | null>(null)
     const [deleteLoading, setDeleteLoading] = useState(false)
+    const [navigatingJobId, setNavigatingJobId] = useState<string | null>(null)
 
     const userId = session?.user?.id
 
@@ -80,6 +82,12 @@ const DashboardView = () => {
             fetchJobDescriptions()
         }
     }, [userId])
+
+    useEffect(() => {
+        return () => {
+            setNavigatingJobId(null)
+        }
+    }, [])
 
     const fetchJobDescriptions = async () => {
         if (!userId) return
@@ -135,6 +143,7 @@ const DashboardView = () => {
     }
 
     const handleViewResumes = (jobId: string) => {
+        setNavigatingJobId(jobId)
         router.push(`/dashboard/resumes/${jobId}`)
     }
 
@@ -393,7 +402,17 @@ const DashboardView = () => {
                                                 handleViewResumes(job._id)
                                             }}
                                             className='cursor-pointer'
-                                        >View Resumes</Button>
+                                            disabled={navigatingJobId === job._id}
+                                        >
+                                            {navigatingJobId === job._id ? (
+                                                <>
+                                                    <LuLoaderCircle className="animate-spin" />
+                                                    Loading...
+                                                </>
+                                            ) : (
+                                                'View Resumes'
+                                            )}
+                                        </Button>
                                     </div>
                                 </CardFooter>
                             </Card>

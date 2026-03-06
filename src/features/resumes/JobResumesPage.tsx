@@ -2,6 +2,16 @@
 
 import ResumeUploadForm from '@/components/ResumeUploadForm';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Sheet,
   SheetContent,
   SheetHeader,
@@ -13,32 +23,25 @@ import { JobDescriptionDto } from '@/types/jod-description';
 import { PaginatedResponse } from '@/types/paginated-response';
 import { ResumeMetadataDto } from '@/types/resume';
 import { useSession } from 'next-auth/react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import {
   FiAlertCircle,
+  FiArrowLeft,
   FiDownload,
   FiEye,
   FiMail,
+  FiPlayCircle,
   FiTrash2,
   FiUpload
 } from 'react-icons/fi';
 import { LuLoaderCircle } from 'react-icons/lu';
 import { TbAlertTriangleFilled } from "react-icons/tb";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import toast from 'react-hot-toast';
 
 
 const JobResumesPage = () => {
+  const router = useRouter();
   const { data: session } = useSession();
   const [jobData, setJobData] = useState<JobDescriptionDto | null>(null);
   const [loading, setLoading] = useState(true);
@@ -175,6 +178,14 @@ const JobResumesPage = () => {
     <div className="min-h-screen bg-gray-50 p-6">
       {/* Main Container */}
       <div className="max-w-7xl mx-auto">
+        {/* Back to Dashboard Button */}
+        <button
+          onClick={() => router.push('/dashboard')}
+          className="flex items-center space-x-2 cursor-pointer text-gray-600 hover:text-gray-900 mb-4 transition-colors group"
+        >
+          <FiArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+          <span>Back to Dashboard</span>
+        </button>
         {/* Job Overview Section */}
         <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
           {loading ? (
@@ -288,6 +299,10 @@ const JobResumesPage = () => {
             <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
               <FiMail className="w-4 h-4" />
               <span>Import from Gmail</span>
+            </button>
+            <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+              <FiPlayCircle className="w-4 h-4" />
+              <span>Run analysis</span>
             </button>
           </div>
 

@@ -34,3 +34,131 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+```
+resume-analyzer
+├─ components.json
+├─ eslint.config.mjs
+├─ next.config.ts
+├─ package-lock.json
+├─ package.json
+├─ postcss.config.mjs
+├─ public
+│  ├─ file.svg
+│  ├─ globe.svg
+│  ├─ logo.png
+│  ├─ next.svg
+│  ├─ vercel.svg
+│  └─ window.svg
+├─ README.md
+├─ src
+│  ├─ app
+│  │  ├─ api
+│  │  │  ├─ analyse
+│  │  │  │  └─ route.ts
+│  │  │  ├─ analysis
+│  │  │  │  ├─ run
+│  │  │  │  └─ status
+│  │  │  ├─ auth
+│  │  │  │  └─ [...nextauth]
+│  │  │  │     └─ route.ts
+│  │  │  ├─ health
+│  │  │  │  └─ route.ts
+│  │  │  ├─ job-description
+│  │  │  │  └─ user
+│  │  │  │     └─ [userId]
+│  │  │  │        ├─ job
+│  │  │  │        │  └─ [jobId]
+│  │  │  │        │     └─ route.ts
+│  │  │  │        └─ route.ts
+│  │  │  └─ resumes
+│  │  │     ├─ metadata
+│  │  │     │  └─ route.ts
+│  │  │     └─ upload-url
+│  │  │        └─ route.ts
+│  │  ├─ dashboard
+│  │  │  ├─ layout.tsx
+│  │  │  ├─ page.tsx
+│  │  │  └─ resumes
+│  │  │     └─ [id]
+│  │  │        └─ page.tsx
+│  │  ├─ favicon.ico
+│  │  ├─ globals.css
+│  │  ├─ layout.tsx
+│  │  └─ page.tsx
+│  ├─ components
+│  │  ├─ auth
+│  │  │  └─ SignIn.tsx
+│  │  ├─ Navbar.tsx
+│  │  ├─ providers
+│  │  │  └─ session-provider.tsx
+│  │  ├─ ResumeUploadForm.tsx
+│  │  └─ ui
+│  │     ├─ alert-dialog.tsx
+│  │     ├─ alert.tsx
+│  │     ├─ avatar.tsx
+│  │     ├─ badge.tsx
+│  │     ├─ button.tsx
+│  │     ├─ card.tsx
+│  │     ├─ dialog.tsx
+│  │     ├─ dropdown-menu.tsx
+│  │     ├─ form.tsx
+│  │     ├─ input.tsx
+│  │     ├─ label.tsx
+│  │     ├─ progress.tsx
+│  │     ├─ select.tsx
+│  │     ├─ separator.tsx
+│  │     ├─ sheet.tsx
+│  │     ├─ skeleton.tsx
+│  │     └─ table.tsx
+│  ├─ features
+│  │  ├─ auth
+│  │  │  └─ components
+│  │  ├─ job-description
+│  │  │  ├─ api.ts
+│  │  │  └─ components
+│  │  │     ├─ CreateJobDescription.tsx
+│  │  │     ├─ DashboardView.tsx
+│  │  │     └─ EditJobDescription.tsx
+│  │  └─ resumes
+│  │     └─ JobResumesPage.tsx
+│  ├─ hooks
+│  │  └─ useResumeUpload.ts
+│  ├─ lib
+│  │  ├─ api
+│  │  │  ├─ axios.ts
+│  │  │  └─ resume.api.ts
+│  │  ├─ db
+│  │  │  ├─ job-description.collection.ts
+│  │  │  ├─ job-description.document.ts
+│  │  │  └─ resume.repository.ts
+│  │  ├─ gcp
+│  │  │  └─ storage.ts
+│  │  ├─ llm
+│  │  │  ├─ llm.connection.ts
+│  │  │  └─ llm.constants.ts
+│  │  ├─ mongodb.ts
+│  │  ├─ queue
+│  │  ├─ utils
+│  │  │  └─ encryption.ts
+│  │  └─ utils.ts
+│  ├─ middleware.ts
+│  ├─ mocks
+│  │  └─ sample-data.ts
+│  ├─ models
+│  │  └─ resume.model.ts
+│  ├─ services
+│  │  ├─ job-description.service.ts
+│  │  ├─ llm.services.ts
+│  │  └─ resume.service.ts
+│  ├─ types
+│  │  ├─ analysis-result.d.ts
+│  │  ├─ jod-description.d.ts
+│  │  ├─ paginated-response.d.ts
+│  │  └─ resume.d.ts
+│  └─ validators
+│     └─ job-description.validators.ts
+├─ tailwind.config.ts
+└─ tsconfig.json
+
+```

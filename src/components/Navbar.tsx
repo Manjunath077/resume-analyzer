@@ -1,5 +1,5 @@
 import Image from "next/image";
-import SignIn from "./auth/SignIn";
+import GoogleSignInButton from "../features/auth/components/GoogleSignInButton";
 
 const Navbar = () => {
     return (
@@ -13,7 +13,7 @@ const Navbar = () => {
                 height={100}
             />
             {/* Auth Section */}
-            <SignIn />
+            <GoogleSignInButton />
         </nav>
     );
 };
