@@ -33,7 +33,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { apiClient } from '@/lib/api/axios'
 import { JobDescriptionResponse } from '@/types/jod-description'
 import {
-    Award,
     Briefcase,
     Calendar,
     Code,
@@ -42,26 +41,19 @@ import {
     GraduationCap,
     Plus,
     Target,
-    Trash2,
-    Users
+    Trash2
 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { FaUsers } from 'react-icons/fa'
+import { IoMdListBox } from 'react-icons/io'
+import { LuLoaderCircle } from 'react-icons/lu'
+import { PiMedalFill } from 'react-icons/pi'
 import CreateJobDescription from './CreateJobDescription'
 import EditJobDescription from './EditJobDescription'
-import { IoMdListBox } from 'react-icons/io'
-import { FaUsers } from 'react-icons/fa'
-import { PiMedalFill } from 'react-icons/pi'
-import { useRouter } from 'next/navigation'
-import { encryptId } from '@/lib/utils/encryption'
-import { LuLoaderCircle } from 'react-icons/lu'
 
-interface ExperienceRequired {
-    minYears: number;
-    maxYears?: number;
-}
-
-const DashboardView = () => {
+const ListJobDescription = () => {
     const { data: session } = useSession()
     const router = useRouter()
 
@@ -524,4 +516,4 @@ const DashboardView = () => {
     )
 }
 
-export default DashboardView
+export default ListJobDescription

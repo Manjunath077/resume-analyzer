@@ -87,11 +87,7 @@ resume-analyzer
 │  │  ├─ layout.tsx
 │  │  └─ page.tsx
 │  ├─ components
-│  │  ├─ auth
-│  │  │  └─ SignIn.tsx
 │  │  ├─ Navbar.tsx
-│  │  ├─ providers
-│  │  │  └─ session-provider.tsx
 │  │  ├─ ResumeUploadForm.tsx
 │  │  └─ ui
 │  │     ├─ alert-dialog.tsx
@@ -113,13 +109,19 @@ resume-analyzer
 │  │     └─ table.tsx
 │  ├─ features
 │  │  ├─ auth
+│  │  │  ├─ auth.config.ts
+│  │  │  ├─ auth.ts
+│  │  │  ├─ auth.types.ts
 │  │  │  └─ components
+│  │  │     └─ GoogleSignInButton.tsx
 │  │  ├─ job-description
-│  │  │  ├─ api.ts
-│  │  │  └─ components
-│  │  │     ├─ CreateJobDescription.tsx
-│  │  │     ├─ DashboardView.tsx
-│  │  │     └─ EditJobDescription.tsx
+│  │  │  ├─ components
+│  │  │  │  ├─ CreateJobDescription.tsx
+│  │  │  │  ├─ EditJobDescription.tsx
+│  │  │  │  └─ ListJobDescription.tsx
+│  │  │  ├─ job-description.mapper.ts
+│  │  │  ├─ job-description.repository.ts
+│  │  │  └─ job-description.service.ts
 │  │  └─ resumes
 │  │     └─ JobResumesPage.tsx
 │  ├─ hooks
@@ -147,13 +149,15 @@ resume-analyzer
 │  │  └─ sample-data.ts
 │  ├─ models
 │  │  └─ resume.model.ts
+│  ├─ providers
+│  │  └─ session-provider.tsx
 │  ├─ services
-│  │  ├─ job-description.service.ts
 │  │  ├─ llm.services.ts
 │  │  └─ resume.service.ts
 │  ├─ types
 │  │  ├─ analysis-result.d.ts
 │  │  ├─ jod-description.d.ts
+│  │  ├─ next-auth.d.ts
 │  │  ├─ paginated-response.d.ts
 │  │  └─ resume.d.ts
 │  └─ validators

@@ -1,36 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { JDService } from '@/services/job-description.service';
+import { JDService } from '@/features/job-description/job-description.service';
 import {
     JobDescriptionSchema,
     JobDescriptionQuerySchema
 } from '@/validators/job-description.validators';
 import { ZodError } from 'zod';
-
-function success(data: any, status = 200) {
-    return NextResponse.json({ success: true, data }, { status });
-}
+import { toDTO } from '@/features/job-description/job-description.mapper';
 
 function failure(message: string, status = 500, errors?: any) {
     return NextResponse.json(
         { success: false, message, ...(errors && { errors }) },
         { status }
     );
-}
-
-function toDTO(doc: any) {
-    return {
-        _id: doc._id.toString(),
-        userId: doc.userId,
-        position: doc.position,
-        experienceRequired: doc.experienceRequired,
-        requiredSkills: doc.requiredSkills,
-        requiredQualifications: doc.requiredQualifications,
-        niceToHaveSkills: doc.niceToHaveSkills,
-        niceToHaveQualifications: doc.niceToHaveQualifications,
-        responsibilities: doc.responsibilities,
-        createdAt: doc.createdAt.toISOString(),
-        updatedAt: doc.updatedAt.toISOString()
-    };
 }
 
 /**
@@ -59,13 +40,10 @@ export async function GET(
 
         const result = await service.findAll(userId, query);
 
-        return NextResponse.json(
-            {
-                ...result,
-                content: result.content.map(toDTO)
-            },
-            { status: 200 }
-        );
+        return NextResponse.json({
+            ...result,
+            content: result.content.map(toDTO)
+        });
 
     } catch (error) {
         if (error instanceof ZodError) {

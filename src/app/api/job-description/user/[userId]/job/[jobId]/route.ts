@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { JDService } from '@/services/job-description.service';
+import { JDService } from '@/features/job-description/job-description.service';
 import { JobDescriptionUpdateSchema } from '@/validators/job-description.validators';
 import { ZodError } from 'zod';
+import { toDTO } from '@/features/job-description/job-description.mapper';
 
 function success(data: any, status = 200) {
     return NextResponse.json({ success: true, data }, { status });
@@ -12,22 +13,6 @@ function failure(message: string, status = 500, errors?: any) {
         { success: false, message, ...(errors && { errors }) },
         { status }
     );
-}
-
-function toDTO(doc: any) {
-    return {
-        _id: doc._id.toString(),
-        userId: doc.userId,
-        position: doc.position,
-        experienceRequired: doc.experienceRequired,
-        requiredSkills: doc.requiredSkills,
-        requiredQualifications: doc.requiredQualifications,
-        niceToHaveSkills: doc.niceToHaveSkills,
-        niceToHaveQualifications: doc.niceToHaveQualifications,
-        responsibilities: doc.responsibilities,
-        createdAt: doc.createdAt.toISOString(),
-        updatedAt: doc.updatedAt.toISOString()
-    };
 }
 
 /**

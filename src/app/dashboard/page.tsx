@@ -1,5 +1,5 @@
-import DashboardView from "@/features/job-description/components/DashboardView";
+import ListJobDescription from "@/features/job-description/components/ListJobDescription";
 
 export default function DashboardPage() {
-  return <DashboardView />
+  return <ListJobDescription />
 }
