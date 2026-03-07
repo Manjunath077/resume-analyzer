@@ -2,7 +2,7 @@ import { apiClient } from "@/lib/api/axios";
 import {
     FileUploadRequest,
     MetadataResumePayload,
-} from "@/types/resume";
+} from "@/features/resume/resume.types";
 
 export const ResumeAPI = {
     async getBatchUploadUrls(jobId: string, files: FileUploadRequest[]) {

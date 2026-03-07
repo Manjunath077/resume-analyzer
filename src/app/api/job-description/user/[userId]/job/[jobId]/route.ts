@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { JDService } from '@/features/job-description/job-description.service';
-import { JobDescriptionUpdateSchema } from '@/validators/job-description.validators';
+import { JDService } from '@/features/job-description/domain/job-description.service';
+import { JobDescriptionUpdateSchema } from '@/features/job-description/job-description.validators';
 import { ZodError } from 'zod';
-import { toDTO } from '@/features/job-description/job-description.mapper';
+import { toDTO } from '@/features/job-description/domain/job-description.mapper';
 
 function success(data: any, status = 200) {
     return NextResponse.json({ success: true, data }, { status });

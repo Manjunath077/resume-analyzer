@@ -31,7 +31,7 @@ import {
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { apiClient } from '@/lib/api/axios'
-import { JobDescriptionResponse } from '@/types/jod-description'
+import { JobDescriptionResponse } from '@/features/job-description/job-description.types'
 import {
     Briefcase,
     Calendar,

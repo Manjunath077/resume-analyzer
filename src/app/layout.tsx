@@ -1,5 +1,5 @@
 import Navbar from "@/components/Navbar";
-import { Providers } from "@/providers/session-provider";
+import { Providers } from "@/features/auth/ui/session-provider";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";

@@ -1,4 +1,4 @@
-import { AnalysisResult } from '@/types/analysis-result';
+import { AnalysisResult } from '@/features/analysis/domain/analysis-result.types';
 import Groq from 'groq-sdk';
 
 export class LLMService {

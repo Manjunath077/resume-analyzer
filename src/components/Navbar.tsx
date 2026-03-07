@@ -1,5 +1,5 @@
 import Image from "next/image";
-import GoogleSignInButton from "../features/auth/components/GoogleSignInButton";
+import GoogleSignInButton from "../features/auth/ui/components/GoogleSignInButton";
 
 const Navbar = () => {
     return (

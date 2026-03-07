@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { JDService } from '@/features/job-description/job-description.service';
+import { JDService } from '@/features/job-description/domain/job-description.service';
 import {
     JobDescriptionSchema,
     JobDescriptionQuerySchema
-} from '@/validators/job-description.validators';
+} from '@/features/job-description/job-description.validators';
 import { ZodError } from 'zod';
-import { toDTO } from '@/features/job-description/job-description.mapper';
+import { toDTO } from '@/features/job-description/domain/job-description.mapper';
 
 function failure(message: string, status = 500, errors?: any) {
     return NextResponse.json(

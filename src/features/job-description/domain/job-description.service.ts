@@ -1,10 +1,10 @@
-import { mongoClient } from "@/lib/mongodb";
+import { mongoClient } from "@/lib/db/mongodb";
 import { JobDescriptionRepository } from "./job-description.repository";
 import {
     CreateJobDescriptionInput,
     UpdateJobDescriptionInput,
     JobDescriptionQuery
-} from "@/validators/job-description.validators";
+} from "@/features/job-description/job-description.validators";
 
 export class JDService {
     private repo: JobDescriptionRepository;

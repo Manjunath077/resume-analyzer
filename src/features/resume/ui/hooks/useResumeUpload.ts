@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ResumeAPI } from "@/lib/api/resume.api";
+import { ResumeAPI } from "@/features/resume/api/resume.api";
 
 export type UploadStatus =
     | "pending"

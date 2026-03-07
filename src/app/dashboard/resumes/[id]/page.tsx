@@ -1,7 +1,7 @@
-import JobResumesPage from "@/features/resumes/JobResumesPage";
+import ListJobResume from "@/features/resume/ui/components/ListJobResume";
 
 export default function ResumesPage() {
     return (
-        <JobResumesPage />
+        <ListJobResume />
     )
 }   

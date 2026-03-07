@@ -1,5 +1,5 @@
 import { bucket } from "@/lib/gcp/storage";
-import { ResumeRepository } from "@/lib/db/resume.repository";
+import { ResumeRepository } from "@/features/resume/domain/resume.repository";
 
 export class ResumeService {
     constructor(

@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { apiClient } from '@/lib/api/axios'
-import { JobDescriptionDto } from '@/types/jod-description'
+import { JobDescriptionDto } from '@/features/job-description/job-description.types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { PlusCircle, Trash2 } from 'lucide-react'
 import { useSession } from 'next-auth/react'

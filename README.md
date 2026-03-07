@@ -54,11 +54,8 @@ resume-analyzer
 ├─ src
 │  ├─ app
 │  │  ├─ api
-│  │  │  ├─ analyse
-│  │  │  │  └─ route.ts
 │  │  │  ├─ analysis
-│  │  │  │  ├─ run
-│  │  │  │  └─ status
+│  │  │  │  └─ route.ts
 │  │  │  ├─ auth
 │  │  │  │  └─ [...nextauth]
 │  │  │  │     └─ route.ts
@@ -88,7 +85,6 @@ resume-analyzer
 │  │  └─ page.tsx
 │  ├─ components
 │  │  ├─ Navbar.tsx
-│  │  ├─ ResumeUploadForm.tsx
 │  │  └─ ui
 │  │     ├─ alert-dialog.tsx
 │  │     ├─ alert.tsx
@@ -108,60 +104,66 @@ resume-analyzer
 │  │     ├─ skeleton.tsx
 │  │     └─ table.tsx
 │  ├─ features
+│  │  ├─ analysis
+│  │  │  └─ domain
+│  │  │     ├─ analysis-result.types.ts
+│  │  │     └─ analysis.service.ts
 │  │  ├─ auth
-│  │  │  ├─ auth.config.ts
-│  │  │  ├─ auth.ts
-│  │  │  ├─ auth.types.ts
-│  │  │  └─ components
-│  │  │     └─ GoogleSignInButton.tsx
+│  │  │  ├─ domain
+│  │  │  │  ├─ auth.config.ts
+│  │  │  │  ├─ auth.ts
+│  │  │  │  └─ auth.types.ts
+│  │  │  └─ ui
+│  │  │     ├─ components
+│  │  │     │  └─ GoogleSignInButton.tsx
+│  │  │     └─ session-provider.tsx
 │  │  ├─ job-description
-│  │  │  ├─ components
-│  │  │  │  ├─ CreateJobDescription.tsx
-│  │  │  │  ├─ EditJobDescription.tsx
-│  │  │  │  └─ ListJobDescription.tsx
-│  │  │  ├─ job-description.mapper.ts
-│  │  │  ├─ job-description.repository.ts
-│  │  │  └─ job-description.service.ts
-│  │  └─ resumes
-│  │     └─ JobResumesPage.tsx
-│  ├─ hooks
-│  │  └─ useResumeUpload.ts
+│  │  │  ├─ domain
+│  │  │  │  ├─ job-description.collection.ts
+│  │  │  │  ├─ job-description.document.ts
+│  │  │  │  ├─ job-description.mapper.ts
+│  │  │  │  ├─ job-description.repository.ts
+│  │  │  │  └─ job-description.service.ts
+│  │  │  ├─ job-description.types.ts
+│  │  │  ├─ job-description.validators.ts
+│  │  │  └─ ui
+│  │  │     ├─ components
+│  │  │     │  ├─ CreateJobDescription.tsx
+│  │  │     │  ├─ EditJobDescription.tsx
+│  │  │     │  └─ ListJobDescription.tsx
+│  │  │     └─ hooks
+│  │  └─ resume
+│  │     ├─ api
+│  │     │  └─ resume.api.ts
+│  │     ├─ domain
+│  │     │  ├─ resume.model.ts
+│  │     │  ├─ resume.repository.ts
+│  │     │  └─ resume.service.ts
+│  │     ├─ resume.types.ts
+│  │     └─ ui
+│  │        ├─ components
+│  │        │  ├─ ListJobResume.tsx
+│  │        │  └─ ResumeUploadForm.tsx
+│  │        ├─ hooks
+│  │        │  └─ useResumeUpload.ts
+│  │        └─ sample-data.ts
 │  ├─ lib
 │  │  ├─ api
-│  │  │  ├─ axios.ts
-│  │  │  └─ resume.api.ts
+│  │  │  └─ axios.ts
 │  │  ├─ db
-│  │  │  ├─ job-description.collection.ts
-│  │  │  ├─ job-description.document.ts
-│  │  │  └─ resume.repository.ts
+│  │  │  └─ mongodb.ts
 │  │  ├─ gcp
 │  │  │  └─ storage.ts
 │  │  ├─ llm
 │  │  │  ├─ llm.connection.ts
 │  │  │  └─ llm.constants.ts
-│  │  ├─ mongodb.ts
-│  │  ├─ queue
-│  │  ├─ utils
-│  │  │  └─ encryption.ts
-│  │  └─ utils.ts
+│  │  └─ utils
+│  │     ├─ cn.ts
+│  │     └─ encryption.ts
 │  ├─ middleware.ts
-│  ├─ mocks
-│  │  └─ sample-data.ts
-│  ├─ models
-│  │  └─ resume.model.ts
-│  ├─ providers
-│  │  └─ session-provider.tsx
-│  ├─ services
-│  │  ├─ llm.services.ts
-│  │  └─ resume.service.ts
-│  ├─ types
-│  │  ├─ analysis-result.d.ts
-│  │  ├─ jod-description.d.ts
-│  │  ├─ next-auth.d.ts
-│  │  ├─ paginated-response.d.ts
-│  │  └─ resume.d.ts
-│  └─ validators
-│     └─ job-description.validators.ts
+│  └─ types
+│     ├─ next-auth.d.ts
+│     └─ paginated-response.d.ts
 ├─ tailwind.config.ts
 └─ tsconfig.json
 

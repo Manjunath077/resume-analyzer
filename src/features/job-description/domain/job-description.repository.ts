@@ -1,6 +1,6 @@
 import { Db, Collection, ObjectId } from "mongodb";
-import { JobDescriptionDocument } from "@/lib/db/job-description.document";
-import { JOB_DESCRIPTIONS_COLLECTION } from "@/lib/db/job-description.collection";
+import { JobDescriptionDocument } from "@/features/job-description/domain/job-description.document";
+import { JOB_DESCRIPTIONS_COLLECTION } from "@/features/job-description/domain/job-description.collection";
 
 export class JobDescriptionRepository {
     private collection: Collection<JobDescriptionDocument>;

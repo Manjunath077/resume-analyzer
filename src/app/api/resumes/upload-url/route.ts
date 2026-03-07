@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { bucket } from "@/lib/gcp/storage";
 import { v4 as uuidv4 } from "uuid";
 import { getToken } from "next-auth/jwt";
-import clientPromise from "@/lib/mongodb";
+import clientPromise from "@/lib/db/mongodb";
 import { ObjectId } from "mongodb";
 
 const ALLOWED_TYPES = [

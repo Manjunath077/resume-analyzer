@@ -1,4 +1,4 @@
-import { PaginatedResponse } from './paginated-response.d';
+import { PaginatedResponse } from '../../types/paginated-response';
 export interface FileUploadRequest {
     fileName: string;
     fileType: string;
@@ -40,4 +40,4 @@ export interface ResumeMetadataDto {
   updatedAt: string;
 }
 
-export const ResumeMetadataResponse = PaginatedResponse<ResumeMetadataDto>;
+export type ResumeMetadataResponse = PaginatedResponse<ResumeMetadataDto>;

@@ -1,6 +1,6 @@
 'use client'
 
-import ResumeUploadForm from '@/components/ResumeUploadForm';
+import ResumeUploadForm from '@/features/resume/ui/components/ResumeUploadForm';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,9 +19,9 @@ import {
 } from "@/components/ui/sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/components/ui/table';
 import { apiClient } from '@/lib/api/axios';
-import { JobDescriptionDto } from '@/types/jod-description';
+import { JobDescriptionDto } from '@/features/job-description/job-description.types';
 import { PaginatedResponse } from '@/types/paginated-response';
-import { ResumeMetadataDto } from '@/types/resume';
+import { ResumeMetadataDto } from '@/features/resume/resume.types';
 import { useSession } from 'next-auth/react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -40,7 +40,7 @@ import { LuLoaderCircle } from 'react-icons/lu';
 import { TbAlertTriangleFilled } from "react-icons/tb";
 
 
-const JobResumesPage = () => {
+const ListJobResume = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const [jobData, setJobData] = useState<JobDescriptionDto | null>(null);
@@ -466,4 +466,4 @@ const JobResumesPage = () => {
   );
 };
 
-export default JobResumesPage;
+export default ListJobResume;

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { testLLMConnection } from "@/lib/llm/llm.connection";
-import { sampleResume, sampleJD } from "@/mocks/sample-data";
+import { sampleResume, sampleJD } from "@/features/resume/ui/sample-data";
 import { LLM_MODEL, TROUBLESHOOTING_STEPS } from "@/lib/llm/llm.constants";
-import { LLMService } from "@/services/llm.services";
+import { LLMService } from "@/features/analysis/domain/analysis.service";
 
 export async function GET() {
   try {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { ResumeService } from "@/services/resume.service";
+import { ResumeService } from "@/features/resume/domain/resume.service";
 
 const resumeService = new ResumeService();
 

@@ -1,4 +1,4 @@
-import { LLMService } from "../../services/llm.services";
+import { LLMService } from "../../features/analysis/domain/analysis.service";
 
 
 export async function testLLMConnection() {

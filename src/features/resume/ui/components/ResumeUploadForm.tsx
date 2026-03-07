@@ -1,6 +1,6 @@
 "use client";
 
-import { useResumeUpload } from "@/hooks/useResumeUpload";
+import { useResumeUpload } from "@/features/resume/ui/hooks/useResumeUpload";
 import { useParams } from "next/navigation";
 import { useRef } from "react";
 
