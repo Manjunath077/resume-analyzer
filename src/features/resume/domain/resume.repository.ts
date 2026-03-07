@@ -79,4 +79,30 @@ export const ResumeRepository = {
             .limit(size)
             .toArray();
     },
+
+    // Add the missing methods
+    async findByJobId(jobId: string) {
+        const client = await clientPromise;
+        const db = client.db();
+
+        return db
+            .collection("resumes")
+            .find({ jobId })
+            .toArray();
+    },
+
+    async updateAnalysisStatus(resumeId: string, status: string) {
+        const client = await clientPromise;
+        const db = client.db();
+
+        return db.collection("resumes").updateOne(
+            { _id: new ObjectId(resumeId) },
+            {
+                $set: {
+                    analysisStatus: status,
+                    updatedAt: new Date(),
+                },
+            }
+        );
+    }
 };
