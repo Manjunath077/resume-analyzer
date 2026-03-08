@@ -1,4 +1,3 @@
-import { authHandler } from "@/features/auth/domain/auth";
+import authHandler from "@/features/auth/domain/auth";
 
-export const GET = authHandler;
-export const POST = authHandler;
+export { authHandler as GET, authHandler as POST };
