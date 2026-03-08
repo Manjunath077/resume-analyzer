@@ -1,23 +1,30 @@
 // Purpose: Extracts text from resume.
-import pdfParse from "pdf-parse";
+import { PDFParse } from 'pdf-parse';
 import mammoth from "mammoth";
 
 export async function parseResume(
     buffer: Buffer,
-    fileUrl: string
+    fileName: string
 ): Promise<string> {
 
-    if (fileUrl.endsWith(".pdf")) {
-        const data = await pdfParse(buffer);
-        return data.text;
+    const lower = fileName.toLowerCase();
+
+    if (lower.endsWith(".pdf")) {
+
+         const uint8 = new Uint8Array(buffer);
+
+        const parser = new PDFParse(uint8);
+        const result = await parser.getText();
+        return result.text;
     }
 
-    if (fileUrl.endsWith(".docx")) {
-        const result = await mammoth.extractRawText({
-            buffer,
-        });
-
+    if (lower.endsWith(".docx")) {
+        const result = await mammoth.extractRawText({ buffer });
         return result.value;
+    }
+
+    if (lower.endsWith(".doc")) {
+        throw new Error("DOC format not supported yet");
     }
 
     throw new Error("Unsupported resume format");

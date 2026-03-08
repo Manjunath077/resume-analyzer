@@ -2,5 +2,7 @@ export interface AnalysisJobPayload {
   resumeId: string;
   jobId: string;
   userId: string;
-  fileUrl: string;
+  fileKey: string;
+  fileName:string;
+  fileType:string;
 }

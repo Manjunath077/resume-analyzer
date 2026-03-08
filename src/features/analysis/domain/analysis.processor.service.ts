@@ -13,18 +13,29 @@ import { downloadResume } from "@/features/resume/processing/resume.downloader";
 import { parseResume } from "@/features/resume/processing/resume.parser";
 import { AnalysisRepository } from "./analysis.repository";
 import { ResumeRepository } from "@/features/resume/domain/resume.repository";
+import { getSignedUrl } from "@/lib/gcp/gcp.storage.service";
+import { AnalysisJobPayload } from "@/lib/queue/analysis.job.types";
 
 export class AnalysisProcessorService {
 
     private analysisRepo = new AnalysisRepository();
 
-    async process(jobData: any) {
-        const { resumeId, jobId, userId, fileUrl } = jobData;
+    async process(jobData: AnalysisJobPayload) {
+        const { resumeId, jobId, userId, fileKey, fileName, fileType } = jobData;
 
         try {
-            const buffer = await downloadResume(fileUrl);
 
-            const resumeText = await parseResume(buffer, fileUrl);
+            if (!jobData.fileKey) {
+                throw new Error("Missing fileKey in job payload");
+            }
+
+            const signedUrl = await getSignedUrl(fileKey);
+
+            console.log("Downloading resume from:", signedUrl);
+
+            const buffer = await downloadResume(signedUrl);
+
+            const resumeText = await parseResume(buffer, fileName);
 
             // TEMP fake score
             const score = Math.floor(Math.random() * 100);

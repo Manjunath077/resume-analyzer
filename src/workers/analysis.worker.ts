@@ -1,16 +1,4 @@
-// This file: Listens to BullMQ queue , Executes analysis pipeline
-// Responsibilities:
-// receive job
-//      ↓
-// download resume
-//      ↓
-// parse resume
-//      ↓
-// run AI analysis
-//      ↓
-// store result
-//      ↓
-// update status
+import "@/lib/env"; 
 
 import { Worker } from "bullmq";
 import { AnalysisJobPayload } from "@/lib/queue/analysis.job.types";
@@ -18,7 +6,7 @@ import { AnalysisProcessorService } from '@/features/analysis/domain/analysis.pr
 
 const processor = new AnalysisProcessorService();
 
-new Worker<AnalysisJobPayload>(
+export const analysisWorker = new Worker<AnalysisJobPayload>(
     "resume-analysis",
     async (job) => {
         console.log("Processing job:", job.id);
@@ -34,3 +22,11 @@ new Worker<AnalysisJobPayload>(
         concurrency: 5,
     }
 );
+
+analysisWorker.on("completed", (job) => {
+    console.log(`Job ${job.id} completed`);
+});
+
+analysisWorker.on("failed", (job, err) => {
+    console.error(`Job ${job?.id} failed`, err);
+});

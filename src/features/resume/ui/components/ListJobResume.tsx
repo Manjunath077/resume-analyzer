@@ -198,7 +198,7 @@ const ListJobResume = () => {
       if (queuedJobs === 0) {
         toast(message, {
           duration: 5000,
-          icon:<FiFileText size={30} color='gold' className="mx-auto" />
+          icon: <FiFileText size={30} color='gold' className="mx-auto" />
         });
         return;
       }
@@ -344,10 +344,6 @@ const ListJobResume = () => {
               <FiDownload className="w-4 h-4" />
               <span>Import from Drive</span>
             </button>
-            <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-              <FiMail className="w-4 h-4" />
-              <span>Import from Gmail</span>
-            </button>
             <button
               onClick={handleRunAnalysis}
               disabled={isAnalysisRunning}
@@ -461,7 +457,9 @@ const ListJobResume = () => {
                             ? "bg-green-100 text-green-700"
                             : (resume.analysisStatus === "processing" || resume.analysisStatus === "pending")
                               ? "bg-yellow-100 text-yellow-700"
-                              : "bg-gray-100 text-gray-700"
+                              : resume.analysisStatus === "failed"
+                                ? "bg-red-100 text-red-700"
+                                : "bg-gray-100 text-gray-700"
                           }`}>
                           {resume.analysisStatus?.replace('_', ' ') || "pending"}
                         </span>

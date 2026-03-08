@@ -31,7 +31,9 @@ export class AnalysisQueueService {
         resumeId: resume._id.toString(),
         jobId,
         userId,
-        fileUrl: resume.fileUrl,
+        fileKey: resume.fileKey,
+        fileName: resume.fileName,
+        fileType: resume.fileType,
       });
     }
 
