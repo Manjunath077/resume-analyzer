@@ -42,7 +42,7 @@ export const ResumeRepository = {
                 $set: {
                     ...updateData,
                     status: "uploaded",
-                    analysisStatus: "queued",
+                    analysisStatus: "pending",
                     updatedAt: new Date(),
                 },
             }

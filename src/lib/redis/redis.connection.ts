@@ -5,6 +5,8 @@
 // Future caching
 // Rate limiting
 
+// This is called a singleton pattern - you only create one messenger and reuse it everywhere, which saves resources and ensures everyone talks to the same messenger.
+
 import { Redis, RedisOptions } from "ioredis";
 
 let redis: Redis | null = null;

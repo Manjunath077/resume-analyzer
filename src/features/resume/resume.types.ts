@@ -34,8 +34,8 @@ export interface ResumeMetadataDto {
   _id: string;
   fileKey: string;
   candidateName: string;
-  status: "uploaded" | "processed" | "failed";
-  analysisStatus: "not_processed" | "processing" | "completed" | "failed";
+  status: string;
+  analysisStatus: string;
   createdAt: string;
   updatedAt: string;
 }

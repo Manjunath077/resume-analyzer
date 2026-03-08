@@ -31,6 +31,7 @@ import {
   FiArrowLeft,
   FiDownload,
   FiEye,
+  FiFileText,
   FiMail,
   FiPlayCircle,
   FiTrash2,
@@ -43,6 +44,9 @@ import { TbAlertTriangleFilled } from "react-icons/tb";
 const ListJobResume = () => {
   const router = useRouter();
   const { data: session } = useSession();
+  const params = useParams()
+  const jobId = params.id as string
+
   const [jobData, setJobData] = useState<JobDescriptionDto | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -53,8 +57,8 @@ const ListJobResume = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedResume, setSelectedResume] = useState<ResumeMetadataDto | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const params = useParams()
-  const jobId = params.id as string
+  const [isAnalysisRunning, setIsAnalysisRunning] = useState(false);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchJobDetails = async () => {
@@ -172,6 +176,50 @@ const ListJobResume = () => {
   const handleDeleteCancel = () => {
     setDeleteDialogOpen(false);
     setSelectedResume(null);
+  };
+
+
+  const handleRunAnalysis = async () => {
+    if (!jobId) return;
+
+    setIsAnalysisRunning(true);
+    setAnalysisError(null);
+
+    const loadingToast = toast.loading("Starting analysis...");
+
+    try {
+      const response = await apiClient.post("/analysis/run", { jobId });
+
+      const { message, queuedJobs } = response.data;
+
+      toast.dismiss(loadingToast);
+
+      // If no resumes were queued
+      if (queuedJobs === 0) {
+        toast(message, {
+          duration: 5000,
+          icon:<FiFileText size={30} color='gold' className="mx-auto" />
+        });
+        return;
+      }
+
+      // Success case
+      toast.success(`${message} (${queuedJobs} resumes queued)`, {
+        duration: 5000,
+      });
+
+      // Refresh resume list
+      fetchResumesMetadata();
+
+    } catch (error: any) {
+      toast.dismiss(loadingToast);
+      const errorMessage = error.response?.data?.error || "Failed to start analysis";
+      setAnalysisError(errorMessage);
+      toast.error(errorMessage, { duration: 5000 });
+      console.error("Analysis error:", error);
+    } finally {
+      setIsAnalysisRunning(false);
+    }
   };
 
   return (
@@ -300,11 +348,34 @@ const ListJobResume = () => {
               <FiMail className="w-4 h-4" />
               <span>Import from Gmail</span>
             </button>
-            <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-              <FiPlayCircle className="w-4 h-4" />
-              <span>Run analysis</span>
+            <button
+              onClick={handleRunAnalysis}
+              disabled={isAnalysisRunning}
+              className={`flex items-center space-x-2 px-4 py-2 border rounded-lg transition-colors ${isAnalysisRunning
+                ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
+                : 'border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
+                }`}
+            >
+              {isAnalysisRunning ? (
+                <>
+                  <LuLoaderCircle className="w-4 h-4 animate-spin" />
+                  <span>Starting Analysis...</span>
+                </>
+              ) : (
+                <>
+                  <FiPlayCircle className="w-4 h-4" />
+                  <span>Run analysis</span>
+                </>
+              )}
             </button>
           </div>
+
+          {analysisError && (
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-2">
+              <FiAlertCircle className="w-5 h-5 text-red-500 shrink-0" />
+              <p className="text-sm text-red-600">{analysisError}</p>
+            </div>
+          )}
 
           {/* Upload Resume Dialog */}
           <Sheet open={isUploadSheetOpen} onOpenChange={setIsUploadSheetOpen}>
@@ -388,7 +459,7 @@ const ListJobResume = () => {
                         <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize
                         ${resume.analysisStatus === "processed"
                             ? "bg-green-100 text-green-700"
-                            : resume.analysisStatus === "processing"
+                            : (resume.analysisStatus === "processing" || resume.analysisStatus === "pending")
                               ? "bg-yellow-100 text-yellow-700"
                               : "bg-gray-100 text-gray-700"
                           }`}>

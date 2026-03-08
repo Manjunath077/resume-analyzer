@@ -11,17 +11,21 @@ import { analysisQueue } from "@/lib/queue/analysis.queue";
 
 export class AnalysisQueueService {
   async queueAnalysis(jobId: string, userId: string) {
+
     const resumes = await ResumeRepository.findByJobId(jobId);
 
     if (!resumes.length) {
-      throw new Error("No resumes found for this job");
+      return 0;
     }
 
     const jobs: AnalysisJobPayload[] = [];
 
     for (const resume of resumes) {
       // You need to implement updateAnalysisStatus as well
-      await ResumeRepository.updateAnalysisStatus(resume._id.toString(), "queued");
+      await ResumeRepository.updateAnalysisStatus(
+        resume._id.toString(), 
+        "queued"
+      );
 
       jobs.push({
         resumeId: resume._id.toString(),

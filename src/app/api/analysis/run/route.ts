@@ -44,13 +44,16 @@
 //     );
 //   }
 // }
+
+// /analysis/run - POST - Start analysis job
 import { NextRequest, NextResponse } from "next/server";
 import { AnalysisQueueService } from "@/features/analysis/domain/analysis.queue.service";
-import { auth } from "@/features/auth/domain/auth";
+import { getServerSession } from "next-auth/next";
+import { authConfig } from "@/features/auth/domain/auth.config";
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
+    const session = await getServerSession(authConfig);
 
     if (!session?.user?.id) {
       return NextResponse.json(
@@ -75,10 +78,18 @@ export async function POST(req: NextRequest) {
       session.user.id
     );
 
+    if (jobCount === 0) {
+      return NextResponse.json({
+        message: "No resumes found for this job. Please upload resumes first.",
+        queuedJobs: 0,
+      });
+    }
+
     return NextResponse.json({
       message: "Analysis started",
       queuedJobs: jobCount,
     });
+    
   } catch (error) {
     console.error("Analysis run error:", error);
 

@@ -63,8 +63,6 @@ export class ResumeService {
             skills: metadata.skills,
         });
 
-        await this.triggerAnalysis(resume._id.toString());
-
         return true;
     }
 
@@ -144,10 +142,5 @@ export class ResumeService {
                 empty: content.length === 0,
             },
         };
-    }
-
-    private async triggerAnalysis(resumeId: string) {
-        console.log("Resume queued for analysis:", resumeId);
-        return true;
     }
 }
