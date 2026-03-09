@@ -15,10 +15,13 @@ import { AnalysisRepository } from "./analysis.repository";
 import { ResumeRepository } from "@/features/resume/domain/resume.repository";
 import { getSignedUrl } from "@/lib/gcp/gcp.storage.service";
 import { AnalysisJobPayload } from "@/lib/queue/analysis.job.types";
+import { LLMAnalysisService } from "@/lib/llm/services/llm-analysis.service";
+import { getCachedAnalysis, setCachedAnalysis } from "@/lib/cache/analysis.cache";
 
 export class AnalysisProcessorService {
 
     private analysisRepo = new AnalysisRepository();
+    private llmService = new LLMAnalysisService();
 
     async process(jobData: AnalysisJobPayload) {
         const { resumeId, jobId, userId, fileKey, fileName, fileType } = jobData;
@@ -38,15 +41,38 @@ export class AnalysisProcessorService {
             const resumeText = await parseResume(buffer, fileName);
 
             // TEMP fake score
-            const score = Math.floor(Math.random() * 100);
+            const cacheKey = `analysis:${jobId}:${resumeId}`;
+            const cached = await getCachedAnalysis(cacheKey);
+            let analysis;
+            if (cached) {
+                console.log("Using cached analysis");
+                analysis = cached;
+            } else {
+                const jobDescription = "FETCH FROM JOB REPO HERE";
+
+                analysis = await this.llmService.analyzeResume(
+                    resumeText,
+                    jobDescription
+                );
+                await setCachedAnalysis(cacheKey, analysis);
+            }
 
             await this.analysisRepo.save({
                 resumeId,
                 jobId,
                 userId,
-                score,
-                summary: resumeText.slice(0, 500),
-                createdAt: new Date(),
+                candidateName: analysis.candidateName,
+                email: analysis.email,
+                phone: analysis.phone,
+                score: analysis.matchScore,
+                skills: analysis.skills,
+                experience: analysis.experience,
+                education: analysis.education,
+                softSkills: analysis.softSkills,
+                strengths: analysis.strengths,
+                gaps: analysis.gaps,
+                recommendations: analysis.recommendations,
+                createdAt: new Date()
             });
 
             await ResumeRepository.updateAnalysisStatus(

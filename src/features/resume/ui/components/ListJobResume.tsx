@@ -39,6 +39,14 @@ import {
 } from 'react-icons/fi';
 import { LuLoaderCircle } from 'react-icons/lu';
 import { TbAlertTriangleFilled } from "react-icons/tb";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import ViewResumeAnalysisResult from './ViewResumeAnalysisResult';
 
 
 const ListJobResume = () => {
@@ -59,6 +67,8 @@ const ListJobResume = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isAnalysisRunning, setIsAnalysisRunning] = useState(false);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const [analysisDialogOpen, setAnalysisDialogOpen] = useState(false);
+  const [selectedResumeForAnalysis, setSelectedResumeForAnalysis] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchJobDetails = async () => {
@@ -220,6 +230,16 @@ const ListJobResume = () => {
     } finally {
       setIsAnalysisRunning(false);
     }
+  };
+
+  const handleViewAnalysis = (resumeId: string) => {
+    setSelectedResumeForAnalysis(resumeId);
+    setAnalysisDialogOpen(true);
+  };
+
+  const handleCloseAnalysisDialog = () => {
+    setAnalysisDialogOpen(false);
+    setSelectedResumeForAnalysis(null);
   };
 
   return (
@@ -468,10 +488,17 @@ const ListJobResume = () => {
                         {formatDate(resume.createdAt)}
                       </TableCell>
                       <TableCell>
-                        <button className="flex items-center space-x-1 text-blue-600 hover:text-blue-800 cursor-pointer">
-                          <FiEye className="w-4 h-4" />
-                          <span className="text-sm">View</span>
-                        </button>
+                        {resume.analysisStatus === "processed" ? (
+                          <button
+                            onClick={() => handleViewAnalysis(resume._id)}
+                            className="flex items-center space-x-1 text-blue-600 hover:text-blue-800 cursor-pointer"
+                          >
+                            <FiEye className="w-4 h-4" />
+                            <span className="text-sm">View</span>
+                          </button>
+                        ) : (
+                          <span className="text-gray-400">-</span>
+                        )}
                       </TableCell>
                       <TableCell>
                         <button
@@ -529,6 +556,30 @@ const ListJobResume = () => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+
+
+          {/* Analysis Result Dialog */}
+          <Dialog open={analysisDialogOpen} onOpenChange={setAnalysisDialogOpen}>
+            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Resume Analysis Result</DialogTitle>
+              </DialogHeader>
+              {selectedResumeForAnalysis && (
+                <ViewResumeAnalysisResult
+                  resumeId={selectedResumeForAnalysis}
+                  onClose={handleCloseAnalysisDialog}
+                />
+              )}
+              <DialogFooter>
+                <button
+                  onClick={handleCloseAnalysisDialog}
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  Close
+                </button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>

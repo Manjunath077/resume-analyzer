@@ -12,8 +12,29 @@ export interface AnalysisDocument {
     jobId: string;
     userId: string;
 
-    score?: number;
-    summary?: string;
+    candidateName?: string;
+    email?: string;
+    phone?: string;
+
+    score: number;
+
+    skills: string[];
+
+    experience: {
+        total: number;
+        companies: string[];
+        relevantProjects: string[];
+    };
+
+    education: string[];
+
+    softSkills: string[];
+
+    strengths: string[];
+
+    gaps: string[];
+
+    recommendations: string;
 
     createdAt: Date;
 }

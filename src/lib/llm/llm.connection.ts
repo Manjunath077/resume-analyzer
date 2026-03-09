@@ -1,7 +1,9 @@
-import { LLMService } from "../../features/analysis/domain/analysis.service";
+import Groq from "groq-sdk";
 
-
-export async function testLLMConnection() {
-    const llm = new LLMService();
-    return llm.testConnection();
+if (!process.env.GROQ_API_KEY) {
+    throw new Error("GROQ_API_KEY missing");
 }
+
+export const groqClient = new Groq({
+    apiKey: process.env.GROQ_API_KEY,
+});

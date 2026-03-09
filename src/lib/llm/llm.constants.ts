@@ -6,3 +6,17 @@ export const TROUBLESHOOTING_STEPS = [
     'Check your internet connection',
     'Visit https://console.groq.com to verify your account'
 ];
+
+export const LLM_TEMPERATURE = 0.1;
+
+export const LLM_MAX_TOKENS = 4096;
+
+export const SYSTEM_PROMPT = `
+You are an expert HR recruiter and resume analyzer.
+
+You MUST return valid JSON only.
+
+Do not return markdown.
+Do not return explanations.
+Return ONLY JSON.
+`;

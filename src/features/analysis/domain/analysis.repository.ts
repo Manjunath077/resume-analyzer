@@ -16,4 +16,40 @@ export class AnalysisRepository {
         return result.insertedId;
     }
 
+
+    async findAll(jobId: string, page: number, size: number) {
+        const collection = await getAnalysisCollection();
+
+        const skip = page * size;
+
+        const filter = {
+            jobId: jobId
+        };
+
+        const cursor = collection
+            .find(filter)
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(size);
+
+        const content = await cursor.toArray();
+
+        const totalElements = await collection.countDocuments(filter);
+
+        return {
+            content,
+            totalElements,
+        };
+    }
+
+    async findByResumeId(resumeId: string) {
+        const collection = await getAnalysisCollection();
+
+        return collection.findOne({
+            resumeId: resumeId
+        });
+    }
+
+
+
 }

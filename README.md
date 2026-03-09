@@ -34,7 +34,6 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
 ```
 resume-analyzer
 ├─ components.json
@@ -55,7 +54,8 @@ resume-analyzer
 │  ├─ app
 │  │  ├─ api
 │  │  │  ├─ analysis
-│  │  │  │  └─ route.ts
+│  │  │  │  └─ run
+│  │  │  │     └─ route.ts
 │  │  │  ├─ auth
 │  │  │  │  └─ [...nextauth]
 │  │  │  │     └─ route.ts
@@ -107,6 +107,10 @@ resume-analyzer
 │  │  ├─ analysis
 │  │  │  └─ domain
 │  │  │     ├─ analysis-result.types.ts
+│  │  │     ├─ analysis.document.ts
+│  │  │     ├─ analysis.processor.service.ts
+│  │  │     ├─ analysis.queue.service.ts
+│  │  │     ├─ analysis.repository.ts
 │  │  │     └─ analysis.service.ts
 │  │  ├─ auth
 │  │  │  ├─ domain
@@ -139,6 +143,9 @@ resume-analyzer
 │  │     │  ├─ resume.model.ts
 │  │     │  ├─ resume.repository.ts
 │  │     │  └─ resume.service.ts
+│  │     ├─ processing
+│  │     │  ├─ resume.downloader.ts
+│  │     │  └─ resume.parser.ts
 │  │     ├─ resume.types.ts
 │  │     └─ ui
 │  │        ├─ components
@@ -152,19 +159,29 @@ resume-analyzer
 │  │  │  └─ axios.ts
 │  │  ├─ db
 │  │  │  └─ mongodb.ts
+│  │  ├─ env.ts
 │  │  ├─ gcp
+│  │  │  ├─ gcp.storage.service.ts
 │  │  │  └─ storage.ts
 │  │  ├─ llm
 │  │  │  ├─ llm.connection.ts
 │  │  │  └─ llm.constants.ts
+│  │  ├─ queue
+│  │  │  ├─ analysis.job.types.ts
+│  │  │  └─ analysis.queue.ts
+│  │  ├─ redis
+│  │  │  └─ redis.connection.ts
 │  │  └─ utils
 │  │     ├─ cn.ts
 │  │     └─ encryption.ts
 │  ├─ middleware.ts
-│  └─ types
-│     ├─ next-auth.d.ts
-│     └─ paginated-response.d.ts
+│  ├─ types
+│  │  ├─ next-auth.d.ts
+│  │  └─ paginated-response.d.ts
+│  └─ workers
+│     └─ analysis.worker.ts
 ├─ tailwind.config.ts
-└─ tsconfig.json
+├─ tsconfig.json
+└─ tsconfig.worker.json
 
 ```
