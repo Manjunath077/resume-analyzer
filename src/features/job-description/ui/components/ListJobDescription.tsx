@@ -140,378 +140,389 @@ const ListJobDescription = () => {
     }
 
     return (
-        <div className="space-y-4 px-4 py-6">
-            {/* Header with Create Button */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-                    <p className="text-muted-foreground">
-                        Manage your job descriptions and track candidate matches
-                    </p>
-                </div>
-                <Button onClick={() => setCreateDialogOpen(true)}>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create Job Description
-                </Button>
-            </div>
-
-            {loading ? (
-                <div className="space-y-6">
-                    {/* Stats Skeletons */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {[1, 2, 3, 4].map((i) => (
-                            <Card key={i}>
-                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <Skeleton className="h-4 w-24" />
-                                    <Skeleton className="h-4 w-4 rounded-full" />
-                                </CardHeader>
-                                <CardContent>
-                                    <Skeleton className="h-8 w-16 mb-2" />
-                                    <Skeleton className="h-3 w-32" />
-                                </CardContent>
-                            </Card>
-                        ))}
+        <div className="min-h-screen bg-gray-50/50">
+            <div className="container mx-auto px-4 sm:px-6 py-20">
+                {/* Header with Create Button */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                    <div>
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">Dashboard</h1>
+                        <p className="text-sm sm:text-base text-muted-foreground mt-1">
+                            Manage your job descriptions and track candidate matches
+                        </p>
                     </div>
+                    <Button
+                        onClick={() => setCreateDialogOpen(true)}
+                        className="w-full sm:w-auto"
+                        size="lg"
+                    >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create Job Description
+                    </Button>
+                </div>
 
-                    {/* Job List Skeletons */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {[1, 2, 3, 4].map((i) => (
-                            <Card key={i}>
-                                <CardHeader>
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <Skeleton className="h-10 w-10 rounded-full" />
-                                            <div className="space-y-2">
-                                                <Skeleton className="h-5 w-40" />
-                                                <Skeleton className="h-4 w-24" />
+                {loading ? (
+                    <div className="space-y-8">
+                        {/* Stats Skeletons */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            {[1, 2, 3, 4].map((i) => (
+                                <Card key={i} className="overflow-hidden">
+                                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                        <Skeleton className="h-4 w-24" />
+                                        <Skeleton className="h-8 w-8 rounded-full" />
+                                    </CardHeader>
+                                    <CardContent>
+                                        <Skeleton className="h-8 w-16 mb-2" />
+                                        <Skeleton className="h-3 w-32" />
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </div>
+
+                        {/* Job List Skeletons */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {[1, 2, 3, 4].map((i) => (
+                                <Card key={i} className="overflow-hidden">
+                                    <CardHeader className="pb-2">
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex items-center gap-3 min-w-0">
+                                                <Skeleton className="h-12 w-12 rounded-full shrink-0" />
+                                                <div className="space-y-2 min-w-0 flex-1">
+                                                    <Skeleton className="h-5 w-40 max-w-full" />
+                                                    <Skeleton className="h-4 w-24" />
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-1 shrink-0">
+                                                <Skeleton className="h-8 w-8 rounded" />
+                                                <Skeleton className="h-8 w-8 rounded" />
                                             </div>
                                         </div>
-                                        <div className="flex gap-2">
-                                            <Skeleton className="h-8 w-8 rounded" />
-                                            <Skeleton className="h-8 w-8 rounded" />
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-4 w-full" />
+                                            <Skeleton className="h-4 w-3/4" />
                                         </div>
-                                    </div>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="space-y-2">
-                                        <Skeleton className="h-4 w-full" />
-                                        <Skeleton className="h-4 w-3/4" />
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-            ) : error ? (
-                <Card className="border-none shadow-none">
-                    <CardContent className="pt-6">
-                        <div className="text-center text-red-600">
-                            <p className="text-lg font-semibold mb-2">Error Loading Dashboard</p>
-                            <p className="text-sm">{error}</p>
-                            <Button
-                                variant="outline"
-                                className="mt-4"
-                                onClick={fetchJobDescriptions}
-                            >
-                                Try Again
-                            </Button>
+                                    </CardContent>
+                                </Card>
+                            ))}
                         </div>
-                    </CardContent>
-                </Card>
-            ) : !data || data.content.length === 0 ? (
-                <Card className="border-none shadow-none">
-                    <CardContent className="pt-12 pb-12">
-                        <div className="text-center space-y-4">
-                            <div className="flex justify-center">
-                                <div className="bg-primary/10 p-4 rounded-full">
-                                    <FileText className="h-12 w-12 text-primary" />
+                    </div>
+                ) : error ? (
+                    <Card className="border-none shadow-none bg-transparent">
+                        <CardContent className="pt-6">
+                            <div className="text-center text-red-600">
+                                <p className="text-lg font-semibold mb-2">Error Loading Dashboard</p>
+                                <p className="text-sm">{error}</p>
+                                <Button
+                                    variant="outline"
+                                    className="mt-4"
+                                    onClick={fetchJobDescriptions}
+                                >
+                                    Try Again
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ) : !data || data.content.length === 0 ? (
+                    <Card className="border-none shadow-none bg-transparent">
+                        <CardContent className="pt-12 pb-12">
+                            <div className="text-center space-y-4">
+                                <div className="flex justify-center">
+                                    <div className="bg-primary/10 p-4 rounded-full">
+                                        <FileText className="h-12 w-12 text-primary" />
+                                    </div>
                                 </div>
+                                <h3 className="text-xl font-semibold">No Job Descriptions Yet</h3>
+                                <p className="text-muted-foreground max-w-sm mx-auto">
+                                    Create your first job description to start analyzing resumes and finding the best candidates.
+                                </p>
+                                <Button onClick={() => setCreateDialogOpen(true)}>
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Create Job Description
+                                </Button>
                             </div>
-                            <h3 className="text-xl font-semibold">No Job Descriptions Yet</h3>
-                            <p className="text-muted-foreground max-w-sm mx-auto">
-                                Create your first job description to start analyzing resumes and finding the best candidates.
-                            </p>
-                            <Button onClick={() => setCreateDialogOpen(true)}>
-                                <Plus className="h-4 w-4 mr-2" />
-                                Create Job Description
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
-            ) : (
-                <div className='space-y-4 '>
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <Card>
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0">
-                                <CardTitle className="text-sm font-medium">Total JDs</CardTitle>
-                                <IoMdListBox size={30} color='orange' />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">{data?.stats?.totalJDs}</div>
-                                <p className="text-xs text-muted-foreground">
-                                    Active job descriptions
-                                </p>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Total Resumes</CardTitle>
-                                <FaUsers size={30} color='skyblue' />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">{data?.stats?.totalResumes}</div>
-                                <p className="text-xs text-muted-foreground">
-                                    Resumes analyzed
-                                </p>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Average Match</CardTitle>
-                                <Target size={30} color='green' />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">{data?.stats?.averageScore}%</div>
-                                <Progress value={data?.stats?.averageScore} className="mt-2" />
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Strong Matches</CardTitle>
-                                <PiMedalFill size={30} color='gold' />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">{data?.stats.strongMatches}</div>
-                                <p className="text-xs text-muted-foreground">
-                                    Candidates with {'>'}80% match
-                                </p>
-                            </CardContent>
-                        </Card>
-                    </div>
-
-                    {/* Job Descriptions Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {data?.content?.map((job) => (
-                            <Card key={job._id} className="hover:shadow-lg transition-shadow">
-                                <CardHeader className="pb-1">
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <Avatar className="h-10 w-10 bg-primary/10">
-                                                <AvatarFallback className="bg-primary/10 text-primary">
-                                                    {getInitials(job.position)}
-                                                </AvatarFallback>
-                                            </Avatar>
-                                            <div>
-                                                <CardTitle className="text-lg">{job.position}</CardTitle>
-                                                <CardDescription className="flex items-center gap-2 mt-1">
-                                                    <Calendar className="h-3 w-3" />
-                                                    Created {formatDate(job.createdAt)}
-                                                </CardDescription>
-                                            </div>
-                                        </div>
-                                        <div className="flex gap-1">
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => {
-                                                    setSelectedJobId(job._id)
-                                                    setEditDialogOpen(true)
-                                                }}
-                                            >
-                                                <Edit className="h-4 w-4" />
-                                            </Button>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                                onClick={() => {
-                                                    setSelectedJobId(job._id)
-                                                    setDeleteDialogOpen(true)
-                                                }}
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                        </div>
-                                    </div>
+                        </CardContent>
+                    </Card>
+                ) : (
+                    <div className="space-y-8">
+                        {/* Stats Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <Card className="overflow-hidden">
+                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <CardTitle className="text-sm font-medium">Total JDs</CardTitle>
+                                    <IoMdListBox size={24} className="text-orange-500 shrink-0" />
                                 </CardHeader>
-                                <CardContent className="space-y-2">
-                                    {/* Experience */}
-                                    <div className="flex items-center gap-2 text-sm">
-                                        <Briefcase className="h-4 w-4 text-muted-foreground" />
-                                        <span>
-                                            Experience: {job.experienceRequired.minYears}
-                                            {job.experienceRequired.maxYears &&
-                                                ` - ${job.experienceRequired.maxYears}`} years
-                                        </span>
-                                    </div>
+                                <CardContent>
+                                    <div className="text-2xl font-bold">{data?.stats?.totalJDs}</div>
+                                    <p className="text-xs text-muted-foreground truncate">
+                                        Active job descriptions
+                                    </p>
+                                </CardContent>
+                            </Card>
 
-                                    {/* Required Skills */}
-                                    <div className="space-y-1">
-                                        <div className="flex items-center gap-2 text-sm font-medium">
-                                            <Code className="h-4 w-4 text-muted-foreground" />
-                                            <span>Required Skills:</span>
-                                        </div>
-                                        <div className="flex flex-wrap gap-1 ml-6">
-                                            {job.requiredSkills.slice(0, 3).map((skill, index) => (
-                                                <Badge key={index} variant="secondary">
-                                                    {skill}
-                                                </Badge>
-                                            ))}
-                                            {job.requiredSkills.length > 3 && (
-                                                <Badge variant="outline">+{job.requiredSkills.length - 3}</Badge>
-                                            )}
-                                        </div>
-                                    </div>
+                            <Card className="overflow-hidden">
+                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <CardTitle className="text-sm font-medium">Total Resumes</CardTitle>
+                                    <FaUsers size={24} className="text-sky-500 shrink-0" />
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-2xl font-bold">{data?.stats?.totalResumes}</div>
+                                    <p className="text-xs text-muted-foreground truncate">
+                                        Resumes analyzed
+                                    </p>
+                                </CardContent>
+                            </Card>
 
-                                    {/* Qualifications (if any) */}
-                                    {job.requiredQualifications && job.requiredQualifications.length > 0 && (
-                                        <div className="flex items-start gap-2 text-sm">
-                                            <GraduationCap className="h-4 w-4 text-muted-foreground mt-0.5" />
-                                            <div>
-                                                <span className="font-medium">Qualifications: </span>
-                                                {job.requiredQualifications.slice(0, 1).map((qual, i) => (
-                                                    <span key={i} className="text-muted-foreground">
-                                                        {qual}
-                                                        {job.requiredQualifications && job.requiredQualifications.length > 1 && ' +more'}
-                                                    </span>
-                                                ))}
+                            <Card className="overflow-hidden">
+                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <CardTitle className="text-sm font-medium">Average Match</CardTitle>
+                                    <Target size={24} className="text-green-500 shrink-0" />
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-2xl font-bold">{data?.stats?.averageScore}%</div>
+                                    <Progress value={data?.stats?.averageScore} className="mt-2" />
+                                </CardContent>
+                            </Card>
+
+                            <Card className="overflow-hidden">
+                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <CardTitle className="text-sm font-medium">Strong Matches</CardTitle>
+                                    <PiMedalFill size={24} className="text-yellow-500 shrink-0" />
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-2xl font-bold">{data?.stats?.strongMatches}</div>
+                                    <p className="text-xs text-muted-foreground truncate">
+                                        Candidates with {'>'}80% match
+                                    </p>
+                                </CardContent>
+                            </Card>
+                        </div>
+
+                        {/* Job Descriptions Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {data?.content?.map((job) => (
+                                <Card key={job._id} className="hover:shadow-lg transition-shadow overflow-hidden">
+                                    <CardHeader className="pb-2">
+                                        <div className="flex items-start justify-between gap-2">
+                                            <div className="flex items-center gap-3 min-w-0 flex-1">
+                                                <Avatar className="h-10 w-10 bg-primary/10 shrink-0">
+                                                    <AvatarFallback className="bg-primary/10 text-primary">
+                                                        {getInitials(job.position)}
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div className="min-w-0 flex-1">
+                                                    <CardTitle className="text-base sm:text-lg truncate">
+                                                        {job.position}
+                                                    </CardTitle>
+                                                    <CardDescription className="flex items-center gap-2 mt-1">
+                                                        <Calendar className="h-3 w-3 shrink-0" />
+                                                        <span className="truncate text-xs sm:text-sm">
+                                                            Created {formatDate(job.createdAt)}
+                                                        </span>
+                                                    </CardDescription>
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-1 shrink-0">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-8 w-8"
+                                                    onClick={() => {
+                                                        setSelectedJobId(job._id)
+                                                        setEditDialogOpen(true)
+                                                    }}
+                                                >
+                                                    <Edit className="h-4 w-4" />
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                    onClick={() => {
+                                                        setSelectedJobId(job._id)
+                                                        setDeleteDialogOpen(true)
+                                                    }}
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
                                             </div>
                                         </div>
-                                    )}
-                                </CardContent>
-                                <CardFooter className="border-t pt-4">
-                                    <div className="flex items-center justify-between w-full text-sm">
-                                        <div className="flex items-center gap-2">
-                                            <FileText className="h-4 w-4 text-muted-foreground" />
-                                            <span>Updated {formatDate(job.updatedAt)}</span>
+                                    </CardHeader>
+                                    <CardContent className="space-y-3">
+                                        {/* Experience */}
+                                        <div className="flex items-start gap-2 text-sm">
+                                            <Briefcase className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+                                            <span className="text-muted-foreground wrap-break-word">
+                                                Experience: {job.experienceRequired.minYears}
+                                                {job.experienceRequired.maxYears &&
+                                                    ` - ${job.experienceRequired.maxYears}`} years
+                                            </span>
                                         </div>
-                                        <Button
-                                            onClick={() => {
-                                                handleViewResumes(job._id)
-                                            }}
-                                            className='cursor-pointer'
-                                            disabled={navigatingJobId === job._id}
-                                        >
-                                            {navigatingJobId === job._id ? (
-                                                <>
-                                                    <LuLoaderCircle className="animate-spin" />
-                                                    Loading...
-                                                </>
-                                            ) : (
-                                                'View Resumes'
-                                            )}
-                                        </Button>
-                                    </div>
-                                </CardFooter>
-                            </Card>
-                        ))}
+
+                                        {/* Required Skills */}
+                                        <div className="space-y-1">
+                                            <div className="flex items-center gap-2 text-sm font-medium">
+                                                <Code className="h-4 w-4 text-muted-foreground shrink-0" />
+                                                <span>Required Skills:</span>
+                                            </div>
+                                            <div className="flex flex-wrap gap-1.5 ml-6">
+                                                {job.requiredSkills.slice(0, 3).map((skill, index) => (
+                                                    <Badge key={index} variant="secondary" className="max-w-full break-all">
+                                                        <span className="truncate">{skill}</span>
+                                                    </Badge>
+                                                ))}
+                                                {job.requiredSkills.length > 3 && (
+                                                    <Badge variant="outline" className="shrink-0">
+                                                        +{job.requiredSkills.length - 3}
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Qualifications (if any) */}
+                                        {job.requiredQualifications && job.requiredQualifications.length > 0 && (
+                                            <div className="flex items-start gap-2 text-sm">
+                                                <GraduationCap className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+                                                <div className="text-muted-foreground wrap-break-words">
+                                                    <span className="font-medium text-foreground">Qualifications: </span>
+                                                    {job.requiredQualifications.slice(0, 1).map((qual, i) => (
+                                                        <span key={i}>
+                                                            {qual}
+                                                            {job.requiredQualifications && job.requiredQualifications.length > 1 && ' +more'}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </CardContent>
+                                    <CardFooter className="border-t pt-4">
+                                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-3 text-sm">
+                                            <div className="flex items-center gap-2">
+                                                <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
+                                                <span className="text-xs sm:text-sm text-muted-foreground">
+                                                    Updated {formatDate(job.updatedAt)}
+                                                </span>
+                                            </div>
+                                            <Button
+                                                onClick={() => handleViewResumes(job._id)}
+                                                className="w-full sm:w-auto cursor-pointer"
+                                                disabled={navigatingJobId === job._id}
+                                                size="sm"
+                                            >
+                                                {navigatingJobId === job._id ? (
+                                                    <>
+                                                        <LuLoaderCircle className="animate-spin mr-2" />
+                                                        Loading...
+                                                    </>
+                                                ) : (
+                                                    'View Resumes'
+                                                )}
+                                            </Button>
+                                        </div>
+                                    </CardFooter>
+                                </Card>
+                            ))}
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-                <DialogContent className="min-w-3xl max-w-5xl max-h-[85vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle>Create Job Description</DialogTitle>
-                        <DialogDescription>
-                            Fill in the details below to create a new job description.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <CreateJobDescription
-                        onClose={() => {
-                            setCreateDialogOpen(false)
-                        }}
-                        onSuccess={() =>
-                            fetchJobDescriptions()
-                        }
-                    />
-                </DialogContent>
-            </Dialog>
-
-            {/* Edit Dialog */}
-            <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-                <DialogContent className="min-w-3xl max-w-5xl max-h-[85vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle>Edit Job Description</DialogTitle>
-                        <DialogDescription>
-                            Update the job description details below.
-                        </DialogDescription>
-                    </DialogHeader>
-                    {selectedJobId && (
-                        <EditJobDescription
-                            jobId={selectedJobId}
+                {/* Create Dialog */}
+                <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+                    <DialogContent className="w-[95vw] max-w-5xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
+                        <DialogHeader>
+                            <DialogTitle className="text-xl sm:text-2xl">Create Job Description</DialogTitle>
+                            <DialogDescription className="text-sm sm:text-base">
+                                Fill in the details below to create a new job description.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <CreateJobDescription
                             onClose={() => {
-                                setEditDialogOpen(false)
-                                setSelectedJobId(null)
+                                setCreateDialogOpen(false)
                             }}
-                            onSuccess={() => {
-                                fetchJobDescriptions()
-                            }}
+                            onSuccess={() => fetchJobDescriptions()}
                         />
-                    )}
-                </DialogContent>
-            </Dialog>
+                    </DialogContent>
+                </Dialog>
 
-            {/* Delete Confirmation Dialog */}
-            <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle className="flex items-center gap-2 text-red-600">
-                            <Trash2 className="h-5 w-5" />
-                            Delete Job Description
-                        </AlertDialogTitle>
-                        <AlertDialogDescription asChild>
-                            <div className="space-y-2">
-                                <p className="font-medium text-foreground">
-                                    This action cannot be undone.
-                                </p>
+                {/* Edit Dialog */}
+                <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+                    <DialogContent className="w-[95vw] max-w-5xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
+                        <DialogHeader>
+                            <DialogTitle className="text-xl sm:text-2xl">Edit Job Description</DialogTitle>
+                            <DialogDescription className="text-sm sm:text-base">
+                                Update the job description details below.
+                            </DialogDescription>
+                        </DialogHeader>
+                        {selectedJobId && (
+                            <EditJobDescription
+                                jobId={selectedJobId}
+                                onClose={() => {
+                                    setEditDialogOpen(false)
+                                    setSelectedJobId(null)
+                                }}
+                                onSuccess={() => {
+                                    fetchJobDescriptions()
+                                }}
+                            />
+                        )}
+                    </DialogContent>
+                </Dialog>
 
-                                <p>
-                                    Deleting this job description will also permanently remove:
-                                </p>
-
-                                <ul className="list-disc pl-6 space-y-1 text-sm">
-                                    <li>All resumes analyzed for this position</li>
-                                    <li>Candidate match scores and analysis results</li>
-                                    <li>Statistics and insights associated with this JD</li>
-                                </ul>
-
-                                <p className="mt-4 text-sm font-medium">
-                                    Are you sure you want to proceed?
-                                </p>
-                            </div>
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel
-                            onClick={() => {
-                                setDeleteDialogOpen(false)
-                                setSelectedJobId(null)
-                            }}
-                        >
-                            Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={handleDelete}
-                            disabled={deleteLoading}
-                            className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
-                        >
-                            {deleteLoading ? (
-                                <>
-                                    <span className="animate-spin mr-2">⏳</span>
-                                    Deleting...
-                                </>
-                            ) : (
-                                'Delete Permanently'
-                            )}
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+                {/* Delete Confirmation Dialog */}
+                <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                    <AlertDialogContent className="w-[95vw] max-w-lg p-4 sm:p-6">
+                        <AlertDialogHeader>
+                            <AlertDialogTitle className="flex items-center gap-2 text-red-600 text-lg sm:text-xl">
+                                <Trash2 className="h-5 w-5 shrink-0" />
+                                Delete Job Description
+                            </AlertDialogTitle>
+                            <AlertDialogDescription asChild>
+                                <div className="space-y-3 text-sm sm:text-base">
+                                    <p className="font-medium text-foreground">
+                                        This action cannot be undone.
+                                    </p>
+                                    <p>
+                                        Deleting this job description will also permanently remove:
+                                    </p>
+                                    <ul className="list-disc pl-6 space-y-1">
+                                        <li>All resumes analyzed for this position</li>
+                                        <li>Candidate match scores and analysis results</li>
+                                        <li>Statistics and insights associated with this JD</li>
+                                    </ul>
+                                    <p className="mt-4 font-medium">
+                                        Are you sure you want to proceed?
+                                    </p>
+                                </div>
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                            <AlertDialogCancel
+                                onClick={() => {
+                                    setDeleteDialogOpen(false)
+                                    setSelectedJobId(null)
+                                }}
+                                className="w-full sm:w-auto"
+                            >
+                                Cancel
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                                onClick={handleDelete}
+                                disabled={deleteLoading}
+                                className="w-full sm:w-auto bg-red-600 hover:bg-red-700 focus:ring-red-600"
+                            >
+                                {deleteLoading ? (
+                                    <>
+                                        <span className="animate-spin mr-2">⏳</span>
+                                        Deleting...
+                                    </>
+                                ) : (
+                                    'Delete Permanently'
+                                )}
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            </div>
         </div>
     )
 }

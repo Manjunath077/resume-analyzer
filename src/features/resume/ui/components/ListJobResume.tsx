@@ -1,6 +1,5 @@
 'use client'
 
-import ResumeUploadForm from '@/features/resume/ui/components/ResumeUploadForm';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,16 +11,24 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/components/ui/table';
-import { apiClient } from '@/lib/api/axios';
 import { JobDescriptionDto } from '@/features/job-description/job-description.types';
-import { PaginatedResponse } from '@/types/paginated-response';
 import { ResumeMetadataDto } from '@/features/resume/resume.types';
+import ResumeUploadForm from '@/features/resume/ui/components/ResumeUploadForm';
+import { apiClient } from '@/lib/api/axios';
+import { PaginatedResponse } from '@/types/paginated-response';
 import { useSession } from 'next-auth/react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -32,20 +39,12 @@ import {
   FiDownload,
   FiEye,
   FiFileText,
-  FiMail,
   FiPlayCircle,
   FiTrash2,
   FiUpload
 } from 'react-icons/fi';
 import { LuLoaderCircle } from 'react-icons/lu';
 import { TbAlertTriangleFilled } from "react-icons/tb";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
 import ViewResumeAnalysisResult from './ViewResumeAnalysisResult';
 
 
@@ -243,109 +242,111 @@ const ListJobResume = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      {/* Main Container */}
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 sm:px-6 py-24">
         {/* Back to Dashboard Button */}
         <button
           onClick={() => router.push('/dashboard')}
           className="flex items-center space-x-2 cursor-pointer text-gray-600 hover:text-gray-900 mb-4 transition-colors group"
         >
           <FiArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          <span>Back to Dashboard</span>
+          <span className="text-sm sm:text-base">Back to Dashboard</span>
         </button>
+
         {/* Job Overview Section */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+        <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 mb-6">
           {loading ? (
             <div className="flex justify-center items-center py-8">
               <LuLoaderCircle className="animate-spin text-gray-500" />
-              <span className="ml-3 text-gray-600">Loading job details...</span>
+              <span className="ml-3 text-sm sm:text-base text-gray-600">Loading job details...</span>
             </div>
           ) : error ? (
             <div className="text-center py-8">
-              <TbAlertTriangleFilled className="w-12 h-12 text-red-500 mx-auto mb-3" />
-              <p className="text-red-600">{error}</p>
+              <TbAlertTriangleFilled className="w-10 h-10 sm:w-12 sm:h-12 text-red-500 mx-auto mb-3" />
+              <p className="text-sm sm:text-base text-red-600">{error}</p>
             </div>
           ) : !jobData ? (
             <div className="text-center py-8">
-              <p className="text-gray-500">No job details found</p>
+              <p className="text-sm sm:text-base text-gray-500">No job details found</p>
             </div>
           ) : (
             <>
               {/* Header with title and metadata */}
-              <div className="flex items-center justify-between mb-4">
-                <h1 className="text-2xl font-semibold text-gray-900">{formattedJobDetails?.title}</h1>
-                <div className="flex items-center space-x-2 text-sm text-gray-500">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 wrap-break-words">
+                  {formattedJobDetails?.title}
+                </h1>
+                <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500">
                   {formattedJobDetails?.experience !== "Not specified" && (
-                    <span>• {formattedJobDetails?.experience}</span>
+                    <span className="bg-gray-100 px-2 py-1 rounded-full">• {formattedJobDetails?.experience}</span>
                   )}
                   {formattedJobDetails && formattedJobDetails.skills > 0 && (
-                    <span>• {formattedJobDetails.skills} Skills</span>
+                    <span className="bg-gray-100 px-2 py-1 rounded-full">• {formattedJobDetails.skills} Skills</span>
                   )}
                   {formattedJobDetails?.createdDate !== "Not specified" && (
-                    <span>• Created {formattedJobDetails?.createdDate}</span>
+                    <span className="bg-gray-100 px-2 py-1 rounded-full">• Created {formattedJobDetails?.createdDate}</span>
                   )}
                 </div>
               </div>
 
               {/* Job Overview Details */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div className="space-y-4">
                   {formattedJobDetails && formattedJobDetails.requiredSkills.length > 0 && (
-                    <>
+                    <div>
                       <h3 className="text-sm font-medium text-gray-500 mb-2">Required Skills</h3>
                       <div className="flex flex-wrap gap-2">
                         {formattedJobDetails.requiredSkills.map((skill, index) => (
-                          <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                          <span key={index} className="px-2 sm:px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs sm:text-sm">
                             {skill}
                           </span>
                         ))}
                       </div>
-                    </>
+                    </div>
                   )}
 
                   {formattedJobDetails && formattedJobDetails.niceToHaveSkills.length > 0 && (
-                    <>
-                      <h3 className="text-sm font-medium text-gray-500 mt-4 mb-2">Nice to Have Skills</h3>
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500 mb-2">Nice to Have Skills</h3>
                       <div className="flex flex-wrap gap-2">
                         {formattedJobDetails.niceToHaveSkills.map((skill, index) => (
-                          <span key={index} className="px-3 py-1 bg-gray-50 text-gray-600 rounded-full text-sm border border-gray-200">
+                          <span key={index} className="px-2 sm:px-3 py-1 bg-gray-50 text-gray-600 rounded-full text-xs sm:text-sm border border-gray-200">
                             {skill}
                           </span>
                         ))}
                       </div>
-                    </>
+                    </div>
                   )}
                 </div>
 
-                <div>
+                <div className="space-y-4">
                   {formattedJobDetails && formattedJobDetails.experience !== "Not specified" && (
-                    <>
+                    <div>
                       <h3 className="text-sm font-medium text-gray-500 mb-2">Experience Required</h3>
-                      <p className="text-gray-900">{formattedJobDetails.experience}</p>
-                    </>
+                      <p className="text-sm sm:text-base text-gray-900">{formattedJobDetails.experience}</p>
+                    </div>
                   )}
 
                   {formattedJobDetails && formattedJobDetails.requiredQualifications.length > 0 && (
-                    <>
-                      <h3 className="text-sm font-medium text-gray-500 mt-3 mb-2">Required Qualifications</h3>
-                      <ul className="list-disc list-inside text-gray-900">
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500 mb-2">Required Qualifications</h3>
+                      <ul className="list-disc list-inside text-gray-900 space-y-1">
                         {formattedJobDetails.requiredQualifications.map((qual, index) => (
-                          <li key={index} className="text-sm">{qual}</li>
+                          <li key={index} className="text-xs sm:text-sm wrap-break-words">{qual}</li>
                         ))}
                       </ul>
-                    </>
+                    </div>
                   )}
 
                   {formattedJobDetails && formattedJobDetails.niceToHaveQualifications.length > 0 && (
-                    <>
-                      <h3 className="text-sm font-medium text-gray-500 mt-3 mb-2">Nice to Have Qualifications</h3>
-                      <ul className="list-disc list-inside text-gray-900">
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500 mb-2">Nice to Have Qualifications</h3>
+                      <ul className="list-disc list-inside text-gray-900 space-y-1">
                         {formattedJobDetails.niceToHaveQualifications.map((qual, index) => (
-                          <li key={index} className="text-sm">{qual}</li>
+                          <li key={index} className="text-xs sm:text-sm wrap-break-words">{qual}</li>
                         ))}
                       </ul>
-                    </>
+                    </div>
                   )}
                 </div>
               </div>
@@ -353,21 +354,22 @@ const ListJobResume = () => {
           )}
 
           {/* Action Buttons - Always visible */}
-          <div className="flex items-center space-x-3">
+          <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={handleOpenUploadSheet}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              className="inline-flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
+            >
               <FiUpload className="w-4 h-4" />
               <span>Upload Resumes</span>
             </button>
-            <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+            <button className="inline-flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base">
               <FiDownload className="w-4 h-4" />
               <span>Import from Drive</span>
             </button>
             <button
               onClick={handleRunAnalysis}
               disabled={isAnalysisRunning}
-              className={`flex items-center space-x-2 px-4 py-2 border rounded-lg transition-colors ${isAnalysisRunning
+              className={`inline-flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 border rounded-lg transition-colors text-sm sm:text-base ${isAnalysisRunning
                 ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
                 : 'border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
                 }`}
@@ -375,7 +377,7 @@ const ListJobResume = () => {
               {isAnalysisRunning ? (
                 <>
                   <LuLoaderCircle className="w-4 h-4 animate-spin" />
-                  <span>Starting Analysis...</span>
+                  <span>Starting...</span>
                 </>
               ) : (
                 <>
@@ -387,54 +389,56 @@ const ListJobResume = () => {
           </div>
 
           {analysisError && (
-            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-2">
-              <FiAlertCircle className="w-5 h-5 text-red-500 shrink-0" />
-              <p className="text-sm text-red-600">{analysisError}</p>
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start space-x-2">
+              <FiAlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+              <p className="text-xs sm:text-sm text-red-600 wrap-break-words">{analysisError}</p>
             </div>
           )}
 
           {/* Upload Resume Dialog */}
           <Sheet open={isUploadSheetOpen} onOpenChange={setIsUploadSheetOpen}>
-            <SheetContent side="right" className="w-full md:max-w-4xl">
-              <SheetHeader className='py-1'>
-                <SheetTitle>
+            <SheetContent side="right" className="w-full sm:max-w-xl md:max-w-2xl lg:max-w-4xl p-4 sm:p-6">
+              <SheetHeader className='py-2 sm:py-4'>
+                <SheetTitle className="text-lg sm:text-xl">
                   Upload Resumes for {formattedJobDetails?.title || "Job"}
                 </SheetTitle>
               </SheetHeader>
-              <ResumeUploadForm
-                onClose={handleCloseUploadSheet}
-                onSuccess={() => {
-                  fetchResumesMetadata();
-                }}
-              />
+              <div className="mt-4">
+                <ResumeUploadForm
+                  onClose={handleCloseUploadSheet}
+                  onSuccess={() => {
+                    fetchResumesMetadata();
+                  }}
+                />
+              </div>
             </SheetContent>
           </Sheet>
         </div>
 
         {/* Resume Summary Section */}
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Resume Summary</h2>
+          <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900">Resume Summary</h2>
           </div>
 
           {/* Conditional rendering using ternary operators */}
           {resumesLoading ? (
             <div className="flex justify-center items-center py-12">
               <LuLoaderCircle className="animate-spin text-gray-500" />
-              <span className="ml-3 text-gray-600">Loading resumes...</span>
+              <span className="ml-3 text-sm sm:text-base text-gray-600">Loading resumes...</span>
             </div>
           ) : resumesError ? (
-            <div className="text-center py-12">
-              <FiAlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
-              <p className="text-red-600">{resumesError}</p>
+            <div className="text-center py-12 px-4">
+              <FiAlertCircle className="w-10 h-10 sm:w-12 sm:h-12 text-red-500 mx-auto mb-3" />
+              <p className="text-sm sm:text-base text-red-600 wrap-break-words">{resumesError}</p>
             </div>
           ) : !resumesData?.content || resumesData.content.length === 0 ? (
-            <div className="text-center py-12">
-              <FiUpload className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-500">No resumes uploaded yet</p>
+            <div className="text-center py-12 px-4">
+              <FiUpload className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-3" />
+              <p className="text-sm sm:text-base text-gray-500">No resumes uploaded yet</p>
               <button
                 onClick={handleOpenUploadSheet}
-                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm sm:text-base"
               >
                 Upload Your First Resume
               </button>
@@ -444,23 +448,25 @@ const ListJobResume = () => {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-gray-50">
-                    <TableHead className="font-semibold">Candidate</TableHead>
-                    <TableHead className="font-semibold">Upload Status</TableHead>
-                    <TableHead className="font-semibold">Analysis Status</TableHead>
-                    <TableHead className="font-semibold">Uploaded On</TableHead>
-                    <TableHead className="font-semibold">Analysis</TableHead>
-                    <TableHead className="font-semibold">Action</TableHead>
+                    <TableHead className="font-semibold text-xs sm:text-sm whitespace-nowrap">Candidate</TableHead>
+                    <TableHead className="font-semibold text-xs sm:text-sm whitespace-nowrap">Upload Status</TableHead>
+                    <TableHead className="font-semibold text-xs sm:text-sm whitespace-nowrap">Analysis Status</TableHead>
+                    <TableHead className="font-semibold text-xs sm:text-sm whitespace-nowrap hidden sm:table-cell">Uploaded On</TableHead>
+                    <TableHead className="font-semibold text-xs sm:text-sm whitespace-nowrap">Analysis</TableHead>
+                    <TableHead className="font-semibold text-xs sm:text-sm whitespace-nowrap">Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {resumesData.content.map((resume: any) => (
                     <TableRow key={resume._id} className="hover:bg-gray-50">
-                      <TableCell className="font-medium p-5">
-                        {resume.candidateName || "Not specified"}
+                      <TableCell className="font-medium p-3 sm:p-4">
+                        <span className="text-xs sm:text-sm wrap-break-words line-clamp-2">
+                          {resume.candidateName || "Not specified"}
+                        </span>
                       </TableCell>
                       <TableCell>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize
-                         ${resume.status === "completed"
+                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium capitalize whitespace-nowrap
+                          ${resume.status === "completed"
                             ? "bg-green-100 text-green-700"
                             : resume.status === "uploaded"
                               ? "bg-blue-100 text-blue-700"
@@ -472,8 +478,8 @@ const ListJobResume = () => {
                         </span>
                       </TableCell>
                       <TableCell>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize
-                        ${resume.analysisStatus === "processed"
+                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium capitalize whitespace-nowrap
+                          ${resume.analysisStatus === "processed"
                             ? "bg-green-100 text-green-700"
                             : (resume.analysisStatus === "processing" || resume.analysisStatus === "pending")
                               ? "bg-yellow-100 text-yellow-700"
@@ -484,8 +490,10 @@ const ListJobResume = () => {
                           {resume.analysisStatus?.replace('_', ' ') || "pending"}
                         </span>
                       </TableCell>
-                      <TableCell className="text-gray-600">
-                        {formatDate(resume.createdAt)}
+                      <TableCell className="text-gray-600 hidden sm:table-cell">
+                        <span className="text-xs sm:text-sm whitespace-nowrap">
+                          {formatDate(resume.createdAt)}
+                        </span>
                       </TableCell>
                       <TableCell>
                         {resume.analysisStatus === "processed" ? (
@@ -494,10 +502,10 @@ const ListJobResume = () => {
                             className="flex items-center space-x-1 text-blue-600 hover:text-blue-800 cursor-pointer"
                           >
                             <FiEye className="w-4 h-4" />
-                            <span className="text-sm">View</span>
+                            <span className="text-xs sm:text-sm hidden sm:inline">View</span>
                           </button>
                         ) : (
-                          <span className="text-gray-400">-</span>
+                          <span className="text-gray-400 text-xs sm:text-sm">-</span>
                         )}
                       </TableCell>
                       <TableCell>
@@ -518,31 +526,32 @@ const ListJobResume = () => {
 
           {/* Delete Confirmation Dialog */}
           <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-            <AlertDialogContent>
+            <AlertDialogContent className="w-[95vw] max-w-lg p-4 sm:p-6">
               <AlertDialogHeader>
-                <AlertDialogTitle className="text-red-600 flex items-center gap-2">
+                <AlertDialogTitle className="text-red-600 flex items-center gap-2 text-lg sm:text-xl">
                   <FiAlertCircle className="w-5 h-5" />
                   Confirm Deletion
                 </AlertDialogTitle>
-                <AlertDialogDescription className="pt-3">
+                <AlertDialogDescription className="pt-3 text-sm sm:text-base">
                   Are you sure you want to delete the resume for{' '}
-                  <span className="font-semibold text-gray-900">
+                  <span className="font-semibold text-gray-900 wrap-break-words">
                     {selectedResume?.candidateName || 'this candidate'}
                   </span>
                   ? This action cannot be undone. The resume will be permanently removed from the system.
                 </AlertDialogDescription>
               </AlertDialogHeader>
-              <AlertDialogFooter>
+              <AlertDialogFooter className="flex-col sm:flex-row gap-2">
                 <AlertDialogCancel
                   onClick={handleDeleteCancel}
                   disabled={isDeleting}
+                  className="w-full sm:w-auto"
                 >
                   Cancel
                 </AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleDeleteConfirm}
                   disabled={isDeleting}
-                  className="bg-red-600 hover:bg-red-700 text-white focus:ring-red-600"
+                  className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white focus:ring-red-600"
                 >
                   {isDeleting ? (
                     <>
@@ -557,12 +566,11 @@ const ListJobResume = () => {
             </AlertDialogContent>
           </AlertDialog>
 
-
           {/* Analysis Result Dialog */}
           <Dialog open={analysisDialogOpen} onOpenChange={setAnalysisDialogOpen}>
-            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
               <DialogHeader>
-                <DialogTitle>Resume Analysis Result</DialogTitle>
+                <DialogTitle className="text-lg sm:text-xl">Resume Analysis Result</DialogTitle>
               </DialogHeader>
               {selectedResumeForAnalysis && (
                 <ViewResumeAnalysisResult
@@ -573,7 +581,7 @@ const ListJobResume = () => {
               <DialogFooter>
                 <button
                   onClick={handleCloseAnalysisDialog}
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                  className="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm sm:text-base"
                 >
                   Close
                 </button>
