@@ -82,7 +82,7 @@ const ResumeUploadForm: React.FC<ResumeUploadFormProps> = ({
   };
 
   return (
-    <div className="max-h-[90vh] p-2 overflow-auto space-y-4">
+    <div className="max-h-[85vh] p-2 overflow-auto space-y-4">
       {/* File Selection */}
       <div className="space-y-3 px-2">
         <div className="flex items-center justify-between">

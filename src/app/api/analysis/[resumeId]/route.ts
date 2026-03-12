@@ -3,15 +3,14 @@ import { AnalysisRepository } from "@/features/analysis/domain/analysis.reposito
 
 export async function GET(
     req: Request,
-    { params }: { params: { resumeId: string } }
+    context: { params: Promise<{ resumeId: string }> }
 ) {
-
     try {
+        const { resumeId } = await context.params;
 
         const repo = new AnalysisRepository();
 
-        const analysis =
-            await repo.findByResumeId(params.resumeId);
+        const analysis = await repo.findByResumeId(resumeId);
 
         if (!analysis) {
             return NextResponse.json(
@@ -23,11 +22,9 @@ export async function GET(
         return NextResponse.json(analysis);
 
     } catch (error) {
-
         return NextResponse.json(
             { error: "Failed to fetch analysis" },
             { status: 500 }
         );
-
     }
 }

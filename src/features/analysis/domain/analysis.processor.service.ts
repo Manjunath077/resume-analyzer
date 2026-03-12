@@ -24,7 +24,7 @@ export class AnalysisProcessorService {
     private llmService = new LLMAnalysisService();
 
     async process(jobData: AnalysisJobPayload) {
-        const { resumeId, jobId, userId, fileKey, fileName, fileType } = jobData;
+        const { resumeId, jobId, userId, fileKey, fileName } = jobData;
 
         try {
 
@@ -61,17 +61,36 @@ export class AnalysisProcessorService {
                 resumeId,
                 jobId,
                 userId,
+
                 candidateName: analysis.candidateName,
                 email: analysis.email,
                 phone: analysis.phone,
-                score: analysis.matchScore,
+
                 skills: analysis.skills,
+                matchedSkills: analysis.matchedSkills,
+                missingCriticalSkills: analysis.missingCriticalSkills,
+
                 experience: analysis.experience,
+
                 education: analysis.education,
                 softSkills: analysis.softSkills,
+
+                careerLevel: analysis.careerLevel,
+                roleFit: analysis.roleFit,
+
+                skillMatchScore: analysis.skillMatchScore,
+                experienceMatchScore: analysis.experienceMatchScore,
+                educationMatchScore: analysis.educationMatchScore,
+                overallFitScore: analysis.overallFitScore,
+
+                interviewProbability: analysis.interviewProbability,
+
                 strengths: analysis.strengths,
                 gaps: analysis.gaps,
+                riskFlags: analysis.riskFlags,
+
                 recommendations: analysis.recommendations,
+
                 createdAt: new Date()
             });
 

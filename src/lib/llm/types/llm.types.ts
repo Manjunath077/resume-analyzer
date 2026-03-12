@@ -1,25 +1,38 @@
 // Defines structured output from LLM.
+
 export interface ExperienceInfo {
-    total: number;
-    companies: string[];
-    relevantProjects: string[];
+    total: number
+    companies: string[]
+    relevantProjects: string[]
 }
 
 export interface LLMAnalysisResult {
-    candidateName: string;
-    email: string;
-    phone: string;
+    candidateName: string
+    email: string
+    phone: string
 
-    skills: string[];
-    experience: ExperienceInfo;
+    skills: string[]
+    matchedSkills: string[]
+    missingCriticalSkills: string[]
 
-    education: string[];
-    softSkills: string[];
+    experience: ExperienceInfo
 
-    matchScore: number;
+    education: string[]
+    softSkills: string[]
 
-    strengths: string[];
-    gaps: string[];
+    careerLevel: string
+    roleFit: string
 
-    recommendations: string;
+    skillMatchScore: number
+    experienceMatchScore: number
+    educationMatchScore: number
+    overallFitScore: number
+
+    interviewProbability: number
+
+    strengths: string[]
+    gaps: string[]
+    riskFlags: string[]
+
+    recommendations: string
 }

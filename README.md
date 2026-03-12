@@ -34,6 +34,8 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
 ```
 resume-analyzer
 ├─ components.json
@@ -54,7 +56,10 @@ resume-analyzer
 │  ├─ app
 │  │  ├─ api
 │  │  │  ├─ analysis
-│  │  │  │  └─ run
+│  │  │  │  ├─ route.ts
+│  │  │  │  ├─ run
+│  │  │  │  │  └─ route.ts
+│  │  │  │  └─ [resumeId]
 │  │  │  │     └─ route.ts
 │  │  │  ├─ auth
 │  │  │  │  └─ [...nextauth]
@@ -103,6 +108,8 @@ resume-analyzer
 │  │     ├─ sheet.tsx
 │  │     ├─ skeleton.tsx
 │  │     └─ table.tsx
+│  ├─ constants
+│  │  └─ landing.ts
 │  ├─ features
 │  │  ├─ analysis
 │  │  │  └─ domain
@@ -110,8 +117,7 @@ resume-analyzer
 │  │  │     ├─ analysis.document.ts
 │  │  │     ├─ analysis.processor.service.ts
 │  │  │     ├─ analysis.queue.service.ts
-│  │  │     ├─ analysis.repository.ts
-│  │  │     └─ analysis.service.ts
+│  │  │     └─ analysis.repository.ts
 │  │  ├─ auth
 │  │  │  ├─ domain
 │  │  │  │  ├─ auth.config.ts
@@ -136,6 +142,13 @@ resume-analyzer
 │  │  │     │  ├─ EditJobDescription.tsx
 │  │  │     │  └─ ListJobDescription.tsx
 │  │  │     └─ hooks
+│  │  ├─ landing
+│  │  │  ├─ components
+│  │  │  │  ├─ FeatureCard.tsx
+│  │  │  │  ├─ FloatingOrb.tsx
+│  │  │  │  ├─ StatItem.tsx
+│  │  │  │  └─ StepCard.tsx
+│  │  │  └─ index.ts
 │  │  └─ resume
 │  │     ├─ api
 │  │     │  └─ resume.api.ts
@@ -150,13 +163,16 @@ resume-analyzer
 │  │     └─ ui
 │  │        ├─ components
 │  │        │  ├─ ListJobResume.tsx
-│  │        │  └─ ResumeUploadForm.tsx
+│  │        │  ├─ ResumeUploadForm.tsx
+│  │        │  └─ ViewResumeAnalysisResult.tsx
 │  │        ├─ hooks
 │  │        │  └─ useResumeUpload.ts
 │  │        └─ sample-data.ts
 │  ├─ lib
 │  │  ├─ api
 │  │  │  └─ axios.ts
+│  │  ├─ cache
+│  │  │  └─ analysis.cache.ts
 │  │  ├─ db
 │  │  │  └─ mongodb.ts
 │  │  ├─ env.ts
@@ -164,8 +180,16 @@ resume-analyzer
 │  │  │  ├─ gcp.storage.service.ts
 │  │  │  └─ storage.ts
 │  │  ├─ llm
+│  │  │  ├─ groq
+│  │  │  │  └─ groq.client.ts
 │  │  │  ├─ llm.connection.ts
-│  │  │  └─ llm.constants.ts
+│  │  │  ├─ llm.constants.ts
+│  │  │  ├─ prompts
+│  │  │  │  └─ resume-analysis.prompt.ts
+│  │  │  ├─ services
+│  │  │  │  └─ llm-analysis.service.ts
+│  │  │  └─ types
+│  │  │     └─ llm.types.ts
 │  │  ├─ queue
 │  │  │  ├─ analysis.job.types.ts
 │  │  │  └─ analysis.queue.ts

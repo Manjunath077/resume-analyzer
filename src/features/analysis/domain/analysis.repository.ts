@@ -44,12 +44,9 @@ export class AnalysisRepository {
 
     async findByResumeId(resumeId: string) {
         const collection = await getAnalysisCollection();
-
-        return collection.findOne({
+        const result = await collection.findOne({
             resumeId: resumeId
         });
+        return result;
     }
-
-
-
 }

@@ -20,6 +20,7 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
@@ -66,7 +67,7 @@ const ListJobResume = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isAnalysisRunning, setIsAnalysisRunning] = useState(false);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
-  const [analysisDialogOpen, setAnalysisDialogOpen] = useState(false);
+  const [analysisSheetOpen, setAnalysisSheetOpen] = useState(false);
   const [selectedResumeForAnalysis, setSelectedResumeForAnalysis] = useState<string | null>(null);
 
   useEffect(() => {
@@ -233,11 +234,11 @@ const ListJobResume = () => {
 
   const handleViewAnalysis = (resumeId: string) => {
     setSelectedResumeForAnalysis(resumeId);
-    setAnalysisDialogOpen(true);
+    setAnalysisSheetOpen(true);
   };
 
-  const handleCloseAnalysisDialog = () => {
-    setAnalysisDialogOpen(false);
+  const handleCloseAnalysisSheet = () => {
+    setAnalysisSheetOpen(false);
     setSelectedResumeForAnalysis(null);
   };
 
@@ -397,20 +398,19 @@ const ListJobResume = () => {
 
           {/* Upload Resume Dialog */}
           <Sheet open={isUploadSheetOpen} onOpenChange={setIsUploadSheetOpen}>
-            <SheetContent side="right" className="w-full sm:max-w-xl md:max-w-2xl lg:max-w-4xl p-4 sm:p-6">
-              <SheetHeader className='py-2 sm:py-4'>
-                <SheetTitle className="text-lg sm:text-xl">
+            <SheetContent side="right" className="w-full md:max-w-3xl">
+              <SheetHeader className='p-2'>
+                <SheetTitle>
                   Upload Resumes for {formattedJobDetails?.title || "Job"}
                 </SheetTitle>
+                <SheetDescription>Drag and drop resume files to begin automated candidate screening</SheetDescription>
               </SheetHeader>
-              <div className="mt-4">
-                <ResumeUploadForm
-                  onClose={handleCloseUploadSheet}
-                  onSuccess={() => {
-                    fetchResumesMetadata();
-                  }}
-                />
-              </div>
+              <ResumeUploadForm
+                onClose={handleCloseUploadSheet}
+                onSuccess={() => {
+                  fetchResumesMetadata();
+                }}
+              />
             </SheetContent>
           </Sheet>
         </div>
@@ -567,27 +567,20 @@ const ListJobResume = () => {
           </AlertDialog>
 
           {/* Analysis Result Dialog */}
-          <Dialog open={analysisDialogOpen} onOpenChange={setAnalysisDialogOpen}>
-            <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
-              <DialogHeader>
-                <DialogTitle className="text-lg sm:text-xl">Resume Analysis Result</DialogTitle>
-              </DialogHeader>
+          <Sheet open={analysisSheetOpen} onOpenChange={setAnalysisSheetOpen}>
+            <SheetContent side="right" className="w-full md:max-w-3xl">
+              <SheetHeader className='p-2'>
+                <SheetTitle>Resume Analysis Result</SheetTitle>
+                <SheetDescription>Detailed candidate evaluation and job fit analysis</SheetDescription>
+              </SheetHeader>
               {selectedResumeForAnalysis && (
                 <ViewResumeAnalysisResult
                   resumeId={selectedResumeForAnalysis}
-                  onClose={handleCloseAnalysisDialog}
+                  onClose={handleCloseAnalysisSheet}
                 />
               )}
-              <DialogFooter>
-                <button
-                  onClick={handleCloseAnalysisDialog}
-                  className="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm sm:text-base"
-                >
-                  Close
-                </button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </div>

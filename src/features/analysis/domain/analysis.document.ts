@@ -6,37 +6,46 @@ import { ObjectId, Collection } from "mongodb";
 import { mongoClient } from "@/lib/db/mongodb";
 
 export interface AnalysisDocument {
-    _id?: ObjectId;
+    _id?: string
 
-    resumeId: string;
-    jobId: string;
-    userId: string;
+    resumeId: string
+    jobId: string
+    userId: string
 
-    candidateName?: string;
-    email?: string;
-    phone?: string;
+    candidateName: string
+    email: string
+    phone: string
 
-    score: number;
-
-    skills: string[];
+    skills: string[]
+    matchedSkills: string[]
+    missingCriticalSkills: string[]
 
     experience: {
-        total: number;
-        companies: string[];
-        relevantProjects: string[];
-    };
+        total: number
+        companies: string[]
+        relevantProjects: string[]
+    }
 
-    education: string[];
+    education: string[]
+    softSkills: string[]
 
-    softSkills: string[];
+    careerLevel: string
+    roleFit: string
 
-    strengths: string[];
+    skillMatchScore: number
+    experienceMatchScore: number
+    educationMatchScore: number
+    overallFitScore: number
 
-    gaps: string[];
+    interviewProbability: number
 
-    recommendations: string;
+    strengths: string[]
+    gaps: string[]
+    riskFlags: string[]
 
-    createdAt: Date;
+    recommendations: string
+
+    createdAt: Date
 }
 
 export async function getAnalysisCollection(): Promise<Collection<AnalysisDocument>> {

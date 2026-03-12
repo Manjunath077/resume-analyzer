@@ -48,13 +48,30 @@ export class LLMAnalysisService {
                 candidateName: "Unknown",
                 email: "",
                 phone: "",
+
                 skills: [],
+                matchedSkills: [],
+                missingCriticalSkills: [],
+
                 experience: { total: 0, companies: [], relevantProjects: [] },
+
                 education: [],
                 softSkills: [],
-                matchScore: 0,
+
+                careerLevel: "",
+                roleFit: "",
+
+                skillMatchScore: 0,
+                experienceMatchScore: 0,
+                educationMatchScore: 0,
+                overallFitScore: 0,
+
+                interviewProbability: 0,
+
                 strengths: [],
                 gaps: [],
+                riskFlags: [],
+
                 recommendations: "Failed to analyze"
             };
         }
