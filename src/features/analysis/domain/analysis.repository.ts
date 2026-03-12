@@ -49,4 +49,14 @@ export class AnalysisRepository {
         });
         return result;
     }
+
+    async findByJobId(jobId: string) {
+        const collection = await getAnalysisCollection();
+
+        return collection
+            .find({
+                jobId,
+            })
+            .toArray();
+    }
 }

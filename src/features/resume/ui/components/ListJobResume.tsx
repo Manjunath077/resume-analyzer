@@ -37,6 +37,7 @@ import toast from 'react-hot-toast';
 import {
   FiAlertCircle,
   FiArrowLeft,
+  FiBarChart2,
   FiDownload,
   FiEye,
   FiFileText,
@@ -47,6 +48,7 @@ import {
 import { LuLoaderCircle } from 'react-icons/lu';
 import { TbAlertTriangleFilled } from "react-icons/tb";
 import ViewResumeAnalysisResult from './ViewResumeAnalysisResult';
+import ViewDetailedAnalysis from "./ViewDetailedAnalysis";
 
 
 const ListJobResume = () => {
@@ -69,6 +71,7 @@ const ListJobResume = () => {
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [analysisSheetOpen, setAnalysisSheetOpen] = useState(false);
   const [selectedResumeForAnalysis, setSelectedResumeForAnalysis] = useState<string | null>(null);
+  const [detailedAnalysisSheetOpen, setDetailedAnalysisSheetOpen] = useState(false);
 
   useEffect(() => {
     const fetchJobDetails = async () => {
@@ -111,6 +114,7 @@ const ListJobResume = () => {
       setResumesLoading(false);
     }
   };
+
 
   // Format job details from API
   const formattedJobDetails = jobData ? {
@@ -240,6 +244,14 @@ const ListJobResume = () => {
   const handleCloseAnalysisSheet = () => {
     setAnalysisSheetOpen(false);
     setSelectedResumeForAnalysis(null);
+  };
+
+  const handleDetailedAnalysis = () => {
+    setDetailedAnalysisSheetOpen(true);
+  };
+
+  const handleCloseDetailedAnalysis = () => {
+    setDetailedAnalysisSheetOpen(false);
   };
 
   return (
@@ -386,6 +398,13 @@ const ListJobResume = () => {
                   <span>Run analysis</span>
                 </>
               )}
+            </button>
+
+            <button
+              onClick={handleDetailedAnalysis}
+              className="inline-flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base">
+              <FiBarChart2 className="w-4 h-4" />
+              <span>Detailed Analysis</span>
             </button>
           </div>
 
@@ -579,6 +598,20 @@ const ListJobResume = () => {
                   onClose={handleCloseAnalysisSheet}
                 />
               )}
+            </SheetContent>
+          </Sheet>
+
+          {/* Detailed Analysis Sheet */}
+          <Sheet open={detailedAnalysisSheetOpen} onOpenChange={setDetailedAnalysisSheetOpen}>
+            <SheetContent side="right" className="w-full md:max-w-full">
+              <SheetHeader className='p-2'>
+                <SheetTitle>Detailed Analysis</SheetTitle>
+                <SheetDescription>Comprehensive analysis of all resumes against job requirements</SheetDescription>
+              </SheetHeader>
+              <ViewDetailedAnalysis
+                onClose={handleCloseDetailedAnalysis}
+                jobId={jobId}
+              />
             </SheetContent>
           </Sheet>
         </div>

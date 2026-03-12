@@ -31,15 +31,9 @@ export class AnalysisProcessorService {
             if (!jobData.fileKey) {
                 throw new Error("Missing fileKey in job payload");
             }
-
             const signedUrl = await getSignedUrl(fileKey);
-
-            console.log("Downloading resume from:", signedUrl);
-
             const buffer = await downloadResume(signedUrl);
-
             const resumeText = await parseResume(buffer, fileName);
-
             // TEMP fake score
             const cacheKey = `analysis:${jobId}:${resumeId}`;
             const cached = await getCachedAnalysis(cacheKey);
