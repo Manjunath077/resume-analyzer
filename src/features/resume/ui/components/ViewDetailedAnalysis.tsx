@@ -1,30 +1,27 @@
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from '@/components/ui/accordion';
+import { CandidateRankingResponse } from '@/features/analysis/domain/candidate-ranking.types';
+import { apiClient } from '@/lib/api/axios';
 import React, { useEffect, useState } from 'react';
 import {
     FiAward,
-    FiUsers,
-    FiTrendingUp,
-    FiTrendingDown,
     FiBarChart2,
-    FiAlertCircle,
-    FiCheckCircle,
-    FiXCircle,
-    FiUser,
     FiBriefcase,
+    FiCheckCircle,
     FiStar,
-    FiThumbsUp
+    FiThumbsUp,
+    FiTrendingDown,
+    FiTrendingUp,
+    FiUser,
+    FiUsers,
+    FiXCircle
 } from 'react-icons/fi';
 import { LuLoaderCircle } from 'react-icons/lu';
 import { TbAlertTriangleFilled } from "react-icons/tb";
-import { apiClient } from '@/lib/api/axios';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
-import { CandidateRankingResponse } from '@/features/analysis/domain/candidate-ranking.types';
 
 interface ViewDetailedAnalysisProps {
     onClose: () => void;
@@ -74,14 +71,14 @@ const ViewDetailedAnalysis: React.FC<ViewDetailedAnalysisProps> = ({ onClose, jo
     };
 
     return (
-        <div className="h-full overflow-y-auto">
+        <div className="h-full w-ful">
             {loading ? (
-                <div className="flex flex-col items-center justify-center h-64">
-                    <LuLoaderCircle className="w-8 h-8 animate-spin text-blue-600" />
-                    <p className="mt-4 text-sm text-gray-600">Loading analysis data...</p>
+                <div className="flex h-full w-full flex-col items-center justify-center">
+                    <LuLoaderCircle className="w-8 h-8 animate-spin text-gray-600" />
+                    <p className="mt-2 text-sm text-gray-600">Loading analysis data...</p>
                 </div>
             ) : error ? (
-                <div className="flex flex-col items-center justify-center h-64 px-4">
+                <div className="flex flex-col items-center justify-center h-full w-full px-4">
                     <TbAlertTriangleFilled className="w-12 h-12 text-red-500 mb-3" />
                     <p className="text-sm text-red-600 text-center">{error}</p>
                     <button
@@ -92,9 +89,9 @@ const ViewDetailedAnalysis: React.FC<ViewDetailedAnalysisProps> = ({ onClose, jo
                     </button>
                 </div>
             ) : !analysisData ? (
-                <div className="flex flex-col items-center justify-center h-64 px-4">
+                <div className="flex flex-col items-center justify-center h-full px-4">
                     <FiBarChart2 className="w-12 h-12 text-gray-400 mb-3" />
-                    <p className="text-sm text-gray-600 text-center">No analysis data available</p>
+                    <p className="text-base text-gray-600 text-center">No analysis data available</p>
                     <button
                         onClick={onClose}
                         className="mt-4 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm"
@@ -103,7 +100,7 @@ const ViewDetailedAnalysis: React.FC<ViewDetailedAnalysisProps> = ({ onClose, jo
                     </button>
                 </div>
             ) : (
-                <div className="space-y-6 p-1">
+                <div className="space-y-4 max-h-[80vh] p-3 overflow-auto">
                     {/* Summary Section */}
                     <div className="bg-linear-to-br from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-100">
                         <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
@@ -174,7 +171,7 @@ const ViewDetailedAnalysis: React.FC<ViewDetailedAnalysisProps> = ({ onClose, jo
                         </div>
                     </div>
 
-                    {/* Ranked Candidates Table */}
+                    {/* Ranked Candidates Accordion */}
                     <div>
                         <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
                             <FiStar className="w-4 h-4 text-yellow-500" />
@@ -187,73 +184,73 @@ const ViewDetailedAnalysis: React.FC<ViewDetailedAnalysisProps> = ({ onClose, jo
                                 <p className="text-sm text-gray-500">No ranked candidates available</p>
                             </div>
                         ) : (
-                            <div className="overflow-x-auto border rounded-lg">
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow className="bg-gray-50">
-                                            <TableHead className="font-semibold text-xs whitespace-nowrap">Rank</TableHead>
-                                            <TableHead className="font-semibold text-xs whitespace-nowrap">Candidate</TableHead>
-                                            <TableHead className="font-semibold text-xs whitespace-nowrap">Fit Score</TableHead>
-                                            <TableHead className="font-semibold text-xs whitespace-nowrap">Interview Prob.</TableHead>
-                                            <TableHead className="font-semibold text-xs whitespace-nowrap">Experience</TableHead>
-                                            <TableHead className="font-semibold text-xs whitespace-nowrap">Matched Skills</TableHead>
-                                            <TableHead className="font-semibold text-xs whitespace-nowrap">Missing Skills</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {analysisData.rankedCandidates.map((candidate) => (
-                                            <TableRow key={candidate.resumeId} className="hover:bg-gray-50">
-                                                <TableCell>
+                            <Accordion type="single" collapsible className="space-y-2">
+                                {analysisData.rankedCandidates.map((candidate) => (
+                                    <AccordionItem
+                                        key={candidate.resumeId}
+                                        value={candidate.resumeId}
+                                        className="border rounded-lg px-4"
+                                    >
+                                        <AccordionTrigger className="hover:no-underline py-3">
+                                            <div className="flex items-center justify-between w-full pr-4">
+                                                <div className="flex items-center gap-4">
+                                                    {/* Rank Badge */}
                                                     <div className={`
-                            w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium
-                            ${candidate.rank === 1 ? 'bg-yellow-100 text-yellow-700' :
+                                                        w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium
+                                                        ${candidate.rank === 1 ? 'bg-yellow-100 text-yellow-700' :
                                                             candidate.rank === 2 ? 'bg-gray-200 text-gray-700' :
                                                                 candidate.rank === 3 ? 'bg-orange-100 text-orange-700' :
                                                                     'bg-gray-100 text-gray-600'}
-                          `}>
+                                                    `}>
                                                         {candidate.rank}
                                                     </div>
-                                                </TableCell>
 
-                                                <TableCell>
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="p-1.5 bg-gray-100 rounded-full">
-                                                            <FiUser className="w-3 h-3 text-gray-600" />
+                                                    {/* Candidate Name and Basic Info */}
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="p-2 bg-gray-100 rounded-full">
+                                                            <FiUser className="w-4 h-4 text-gray-600" />
                                                         </div>
-                                                        <span className="text-xs sm:text-sm font-medium">
-                                                            {candidate.candidateName || 'Not specified'}
-                                                        </span>
+                                                        <div className="text-left">
+                                                            <span className="text-sm font-medium">
+                                                                {candidate.candidateName || 'Not specified'}
+                                                            </span>
+                                                            <div className="flex items-center gap-3 mt-1">
+                                                                <div className="flex items-center gap-1">
+                                                                    <FiBriefcase className="w-3 h-3 text-gray-400" />
+                                                                    <span className="text-xs text-gray-600">{candidate.experienceYears} yrs</span>
+                                                                </div>
+                                                                <div className="flex items-center gap-1">
+                                                                    <span className={`text-xs font-medium ${getScoreColor(candidate.overallFitScore)}`}>
+                                                                        Overall Score : {candidate.overallFitScore}%
+                                                                    </span>
+                                                                </div>
+                                                                <div className="flex items-center gap-1">
+                                                                    <span className={`text-xs font-medium ${getProbabilityColor(candidate.interviewProbability)}`}>
+                                                                        Interview Probability : {formatProbability(candidate.interviewProbability)}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </TableCell>
+                                                </div>
+                                            </div>
+                                        </AccordionTrigger>
 
-                                                <TableCell>
-                                                    <span className={`text-sm font-semibold ${getScoreColor(candidate.overallFitScore)}`}>
-                                                        {candidate.overallFitScore}%
-                                                    </span>
-                                                </TableCell>
-
-                                                <TableCell>
-                                                    <span className={`text-sm font-medium ${getProbabilityColor(candidate.interviewProbability)}`}>
-                                                        {formatProbability(candidate.interviewProbability)}
-                                                    </span>
-                                                </TableCell>
-
-                                                <TableCell>
-                                                    <div className="flex items-center gap-1">
-                                                        <FiBriefcase className="w-3 h-3 text-gray-400" />
-                                                        <span className="text-xs">{candidate.experienceYears} yrs</span>
-                                                    </div>
-                                                </TableCell>
-
-                                                <TableCell>
-                                                    <div className="flex flex-wrap gap-1 max-w-50">
+                                        <AccordionContent className="pt-4 pb-3">
+                                            <div className="space-y-4 pl-12">
+                                                {/* Matched Skills Section */}
+                                                <div>
+                                                    <h4 className="text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                                                        <FiCheckCircle className="w-3 h-3 text-green-600" />
+                                                        Matched Skills
+                                                    </h4>
+                                                    <div className="flex flex-wrap gap-1">
                                                         {candidate.matchedSkills.length > 0 ? (
                                                             candidate.matchedSkills.map((skill, index) => (
                                                                 <span
                                                                     key={index}
-                                                                    className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs"
+                                                                    className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs"
                                                                 >
-                                                                    <FiCheckCircle className="w-2.5 h-2.5" />
                                                                     {skill}
                                                                 </span>
                                                             ))
@@ -261,17 +258,21 @@ const ViewDetailedAnalysis: React.FC<ViewDetailedAnalysisProps> = ({ onClose, jo
                                                             <span className="text-xs text-gray-400">None</span>
                                                         )}
                                                     </div>
-                                                </TableCell>
+                                                </div>
 
-                                                <TableCell>
-                                                    <div className="flex flex-wrap gap-1 max-w-50">
+                                                {/* Missing Critical Skills Section */}
+                                                <div>
+                                                    <h4 className="text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                                                        <FiXCircle className="w-3 h-3 text-red-600" />
+                                                        Missing Critical Skills
+                                                    </h4>
+                                                    <div className="flex flex-wrap gap-1">
                                                         {candidate.missingCriticalSkills.length > 0 ? (
                                                             candidate.missingCriticalSkills.map((skill, index) => (
                                                                 <span
                                                                     key={index}
-                                                                    className="inline-flex items-center gap-1 px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs"
+                                                                    className="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs"
                                                                 >
-                                                                    <FiXCircle className="w-2.5 h-2.5" />
                                                                     {skill}
                                                                 </span>
                                                             ))
@@ -282,12 +283,12 @@ const ViewDetailedAnalysis: React.FC<ViewDetailedAnalysisProps> = ({ onClose, jo
                                                             </span>
                                                         )}
                                                     </div>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </div>
+                                                </div>
+                                            </div>
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                ))}
+                            </Accordion>
                         )}
                     </div>
                 </div>
