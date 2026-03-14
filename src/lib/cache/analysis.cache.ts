@@ -1,6 +1,6 @@
 import { getRedisConnection } from "@/lib/redis/redis.connection";
 
-const CACHE_TTL = 60 * 60 * 24 * 7; // 7 days
+const CACHE_TTL = 60 * 60 * 24 * 2; // 2 days
 
 export async function getCachedAnalysis(key: string) {
     const redis = getRedisConnection(); // Get the Redis connection instance

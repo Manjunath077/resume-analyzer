@@ -375,10 +375,6 @@ const ListJobResume = () => {
               <FiUpload className="w-4 h-4" />
               <span>Upload Resumes</span>
             </button>
-            <button className="inline-flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base">
-              <FiDownload className="w-4 h-4" />
-              <span>Import from Drive</span>
-            </button>
             <button
               onClick={handleRunAnalysis}
               disabled={isAnalysisRunning}
@@ -415,7 +411,7 @@ const ListJobResume = () => {
             </div>
           )}
 
-          {/* Upload Resume Dialog */}
+          {/* Upload Resume sheet */}
           <Sheet open={isUploadSheetOpen} onOpenChange={setIsUploadSheetOpen}>
             <SheetContent side="right" className="w-full md:max-w-3xl">
               <SheetHeader className='p-2'>

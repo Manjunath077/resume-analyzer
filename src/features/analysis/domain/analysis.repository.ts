@@ -10,7 +10,6 @@ export class AnalysisRepository {
 
         const result = await collection.insertOne({
             ...data,
-            createdAt: new Date(),
         });
 
         return result.insertedId;
@@ -58,5 +57,14 @@ export class AnalysisRepository {
                 jobId,
             })
             .toArray();
+    }
+
+    async findByResumeAndJob(resumeId: string, jobId: string) {
+        const collection = await getAnalysisCollection();
+
+        return collection.findOne({
+            resumeId: resumeId,
+            jobId: jobId
+        });
     }
 }

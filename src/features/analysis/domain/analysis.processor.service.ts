@@ -23,34 +23,56 @@ export class AnalysisProcessorService {
     private analysisRepo = new AnalysisRepository();
     private llmService = new LLMAnalysisService();
 
+
     async process(jobData: AnalysisJobPayload) {
         const { resumeId, jobId, userId, fileKey, fileName } = jobData;
 
         try {
 
-            if (!jobData.fileKey) {
+            if (!fileKey) {
                 throw new Error("Missing fileKey in job payload");
             }
-            const signedUrl = await getSignedUrl(fileKey);
-            const buffer = await downloadResume(signedUrl);
-            const resumeText = await parseResume(buffer, fileName);
-            // TEMP fake score
+
+            // Check DB first
+            const existingAnalysis = await this.analysisRepo.findByResumeAndJob(
+                resumeId,
+                jobId
+            );
+
+            if (existingAnalysis) {
+                console.log("Analysis already exists in DB. Skipping.");
+                return;
+            }
+
+            //  Check Redis cache
             const cacheKey = `analysis:${jobId}:${resumeId}`;
             const cached = await getCachedAnalysis(cacheKey);
+
             let analysis;
+
             if (cached) {
-                console.log("Using cached analysis");
+                console.log("Using cached analysis from Redis");
                 analysis = cached;
             } else {
+
+                // Download resume
+                const signedUrl = await getSignedUrl(fileKey);
+                const buffer = await downloadResume(signedUrl);
+                const resumeText = await parseResume(buffer, fileName);
+
                 const jobDescription = "FETCH FROM JOB REPO HERE";
 
+                // Call LLM
                 analysis = await this.llmService.analyzeResume(
                     resumeText,
                     jobDescription
                 );
+
+                // Cache result
                 await setCachedAnalysis(cacheKey, analysis);
             }
 
+            // Save once
             await this.analysisRepo.save({
                 resumeId,
                 jobId,
@@ -85,7 +107,7 @@ export class AnalysisProcessorService {
 
                 recommendations: analysis.recommendations,
 
-                createdAt: new Date()
+                createdAt: new Date(),
             });
 
             await ResumeRepository.updateAnalysisStatus(
