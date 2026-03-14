@@ -49,6 +49,7 @@ import { LuLoaderCircle } from 'react-icons/lu';
 import { TbAlertTriangleFilled } from "react-icons/tb";
 import ViewResumeAnalysisResult from './ViewResumeAnalysisResult';
 import ViewDetailedAnalysis from "./ViewDetailedAnalysis";
+import { FiRefreshCw } from 'react-icons/fi';
 
 
 const ListJobResume = () => {
@@ -115,6 +116,26 @@ const ListJobResume = () => {
     }
   };
 
+  const handleRefreshResumes = async () => {
+    setResumesLoading(true);
+    setResumesError(null);
+
+    try {
+      const response = await apiClient.get(`/resumes/metadata?page=0&size=10&jobId=${jobId}`);
+      setResumesData(response.data);
+      toast.success('Resumes list refreshed successfully!', {
+        duration: 3000,
+      });
+    } catch (err) {
+      setResumesError('Failed to refresh resumes data');
+      console.error('Error refreshing resumes:', err);
+      toast.error('Failed to refresh resumes. Please try again.', {
+        duration: 4000,
+      });
+    } finally {
+      setResumesLoading(false);
+    }
+  };
 
   // Format job details from API
   const formattedJobDetails = jobData ? {
@@ -413,7 +434,7 @@ const ListJobResume = () => {
 
           {/* Upload Resume sheet */}
           <Sheet open={isUploadSheetOpen} onOpenChange={setIsUploadSheetOpen}>
-            <SheetContent side="right" className="w-full md:max-w-3xl">
+            <SheetContent side="right" className="w-full md:max-w-5xl">
               <SheetHeader className='p-2'>
                 <SheetTitle>
                   Upload Resumes for {formattedJobDetails?.title || "Job"}
@@ -433,7 +454,21 @@ const ListJobResume = () => {
         {/* Resume Summary Section */}
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
-            <h2 className="text-base sm:text-lg font-semibold text-gray-900">Resume Summary</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">Resume Summary</h2>
+              <button
+                onClick={handleRefreshResumes}
+                disabled={resumesLoading}
+                className={`inline-flex items-center space-x-2 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${resumesLoading
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer'
+                  }`}
+                title="Refresh resumes list"
+              >
+                <FiRefreshCw className={`w-4 h-4 ${resumesLoading ? 'animate-spin' : ''}`} />
+                <span className="hidden sm:inline">Refresh</span>
+              </button>
+            </div>
           </div>
 
           {/* Conditional rendering using ternary operators */}

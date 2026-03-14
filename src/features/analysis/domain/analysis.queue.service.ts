@@ -21,7 +21,6 @@ export class AnalysisQueueService {
     const jobs: AnalysisJobPayload[] = [];
 
     for (const resume of resumes) {
-      // You need to implement updateAnalysisStatus as well
       await ResumeRepository.updateAnalysisStatus(
         resume._id.toString(), 
         "queued"

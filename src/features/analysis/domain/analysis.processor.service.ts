@@ -41,6 +41,11 @@ export class AnalysisProcessorService {
 
             if (existingAnalysis) {
                 console.log("Analysis already exists in DB. Skipping.");
+                
+                await ResumeRepository.updateAnalysisStatus(
+                    resumeId,
+                    "processed"
+                );
                 return;
             }
 
