@@ -175,10 +175,10 @@ export default function HomePage() {
                 <div className="flex items-center gap-2 font-extrabold text-xl">
                     <Image
                         src="/resume-analyzer-logo.png"
-                        alt="Resume Analyzer Logo"
-                        width={160}
-                        height={160}
-                        className="object-contain"
+                        alt="Resume Analyzer"
+                        width={140}
+                        height={40}
+                        className="h-10 w-auto"
                         priority
                     />
                 </div>
