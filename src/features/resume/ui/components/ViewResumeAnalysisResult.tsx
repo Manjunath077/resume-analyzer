@@ -10,20 +10,17 @@ import {
   FiCode,
   FiMail,
   FiPhone,
+  FiTarget,
   FiTrendingUp,
   FiUser,
   FiUsers,
-  FiZap,
-  FiPercent,
-  FiTarget,
-  FiPieChart
+  FiZap
 } from 'react-icons/fi';
 import { GiStrong } from "react-icons/gi";
 import { LuLoaderCircle } from 'react-icons/lu';
-import { MdLightbulb, MdSchool, MdWork, MdWarning } from "react-icons/md";
-import { TbAlertTriangleFilled, TbChartInfographic } from "react-icons/tb";
-import { RiProgress4Line, RiMindMap } from "react-icons/ri";
-import { HiOutlineChartBar } from "react-icons/hi";
+import { MdLightbulb, MdSchool, MdWarning, MdWork } from "react-icons/md";
+import { RiMindMap, RiProgress4Line } from "react-icons/ri";
+import { TbAlertTriangleFilled } from "react-icons/tb";
 
 interface ViewResumeAnalysisResultProps {
   resumeId: string;
@@ -86,14 +83,14 @@ const ViewResumeAnalysisResult: React.FC<ViewResumeAnalysisResultProps> = ({ res
   };
 
   return (
-    <div className="p-3 max-h-[90vh] overflow-auto">
+    <div className="h-full w-full">
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-16">
-          <LuLoaderCircle className="w-12 h-12 animate-spin text-blue-600 mb-4" />
-          <p className="text-gray-600 text-sm sm:text-base">Loading analysis data...</p>
+        <div className="flex h-full w-full flex-col items-center justify-center py-16">
+          <LuLoaderCircle className="w-8 h-8 animate-spin text-gray-600" />
+          <p className="mt-2 text-sm text-gray-600">Loading analysis data...</p>
         </div>
       ) : error ? (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+        <div className="flex flex-col items-center justify-center h-full w-full px-4">
           <TbAlertTriangleFilled className="w-12 h-12 text-red-500 mx-auto mb-3" />
           <p className="text-red-600 text-sm sm:text-base mb-4">{error}</p>
           <button
@@ -104,7 +101,7 @@ const ViewResumeAnalysisResult: React.FC<ViewResumeAnalysisResultProps> = ({ res
           </button>
         </div>
       ) : !analysisData ? (
-        <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 text-center">
+        <div className="flex flex-col items-center justify-center h-full px-4">
           <BsFileEarmarkText className="w-12 h-12 text-gray-400 mx-auto mb-3" />
           <p className="text-gray-600 text-sm sm:text-base">No analysis data found for this resume</p>
           <button
@@ -115,50 +112,69 @@ const ViewResumeAnalysisResult: React.FC<ViewResumeAnalysisResultProps> = ({ res
           </button>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4 max-h-[83vh] overflow-auto py-2 px-4">
           {/* Header Section */}
-          <div className="bg-linear-to-r from-blue-500 to-blue-300 rounded-xl p-6 text-white">
-            <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
-              <div className="flex-1">
-                <h2 className="text-xl sm:text-2xl font-bold mb-2 flex items-center gap-2">
-                  <FiUser className="w-6 h-6" />
-                  {analysisData.candidateName || 'Not specified'}
-                </h2>
-                <div className="flex flex-wrap items-center gap-4 text-sm text-blue-100">
-                  {analysisData.email && (
-                    <span className="flex items-center gap-1">
-                      <FiMail className="w-4 h-4" />
-                      {analysisData.email}
-                    </span>
-                  )}
-                  {analysisData.phone && (
-                    <span className="flex items-center gap-1">
-                      <FiPhone className="w-4 h-4" />
-                      {analysisData.phone}
-                    </span>
-                  )}
-                  {analysisData.careerLevel && (
-                    <span className="flex items-center gap-1 bg-blue-500/30 px-2 py-1 rounded-full">
-                      <RiMindMap className="w-4 h-4" />
-                      {analysisData.careerLevel}
-                    </span>
-                  )}
+          <div className="border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+
+              {/* Candidate Info */}
+              <div className="flex items-start gap-4 flex-1">
+                <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100">
+                  <FiUser className="w-6 h-6 text-gray-600" />
+                </div>
+
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
+                    {analysisData.candidateName || "Not specified"}
+                  </h2>
+
+                  <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-gray-600">
+
+                    {analysisData.email && (
+                      <span className="flex items-center gap-1">
+                        <FiMail className="w-4 h-4 text-gray-500" />
+                        {analysisData.email}
+                      </span>
+                    )}
+
+                    {analysisData.phone && (
+                      <span className="flex items-center gap-1">
+                        <FiPhone className="w-4 h-4 text-gray-500" />
+                        {analysisData.phone}
+                      </span>
+                    )}
+
+                    {analysisData.careerLevel && (
+                      <span className="flex items-center gap-1 px-2 py-1 text-xs font-medium bg-gray-100 rounded-md">
+                        <RiMindMap className="w-4 h-4 text-gray-500" />
+                        {analysisData.careerLevel}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
-              <div className="text-right">
-                <div className={`px-4 py-2 rounded-full ${getScoreBgColor(analysisData.overallFitScore || 0)} ${getScoreColor(analysisData.overallFitScore || 0)} font-bold text-2xl`}>
+
+              {/* Score Section */}
+              <div className="text-center">
+                <div
+                  className={` py-2 rounded-lg text-xl font-bold border ${getScoreBgColor(
+                    analysisData.overallFitScore || 0
+                  )} ${getScoreColor(analysisData.overallFitScore || 0)}`}
+                >
                   {analysisData.overallFitScore || 0}%
                 </div>
-                <p className="text-xs text-blue-100 mt-2">Overall Fit Score</p>
+                <p className="text-xs text-gray-500 mt-1">Overall Fit Score</p>
               </div>
+
             </div>
 
             {/* Role Fit */}
             {analysisData.roleFit && (
-              <div className="mt-4 pt-4 border-t border-blue-400/30">
-                <p className="text-sm text-blue-100 flex items-center gap-2">
-                  <FiTarget className="w-4 h-4" />
-                  <span className="font-medium">Role Fit:</span> {analysisData.roleFit}
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <p className="text-sm text-gray-700 flex items-center gap-2">
+                  <FiTarget className="w-4 h-4 text-gray-500" />
+                  <span className="font-medium">Role Fit:</span>
+                  {analysisData.roleFit}
                 </p>
               </div>
             )}

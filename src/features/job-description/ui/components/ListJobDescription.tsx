@@ -28,10 +28,9 @@ import {
     DialogHeader,
     DialogTitle
 } from '@/components/ui/dialog'
-import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
-import { apiClient } from '@/lib/api/axios'
 import { JobDescriptionResponse } from '@/features/job-description/job-description.types'
+import { apiClient } from '@/lib/api/axios'
 import {
     Briefcase,
     Calendar,
@@ -40,16 +39,12 @@ import {
     FileText,
     GraduationCap,
     Plus,
-    Target,
     Trash2
 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { FaUsers } from 'react-icons/fa'
-import { IoMdListBox } from 'react-icons/io'
 import { LuLoaderCircle } from 'react-icons/lu'
-import { PiMedalFill } from 'react-icons/pi'
 import CreateJobDescription from './CreateJobDescription'
 import EditJobDescription from './EditJobDescription'
 
@@ -245,60 +240,6 @@ const ListJobDescription = () => {
                     </Card>
                 ) : (
                     <div className="space-y-8">
-                        {/* Stats Grid */}
-                        {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <Card className="overflow-hidden">
-                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-sm font-medium">Total JDs</CardTitle>
-                                    <IoMdListBox size={24} className="text-orange-500 shrink-0" />
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="text-2xl font-bold">{data?.stats?.totalJDs}</div>
-                                    <p className="text-xs text-muted-foreground truncate">
-                                        Active job descriptions
-                                    </p>
-                                </CardContent>
-                            </Card>
-
-                            <Card className="overflow-hidden">
-                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-sm font-medium">Total Resumes</CardTitle>
-                                    <FaUsers size={24} className="text-sky-500 shrink-0" />
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="text-2xl font-bold">{data?.stats?.totalResumes}</div>
-                                    <p className="text-xs text-muted-foreground truncate">
-                                        Resumes analyzed
-                                    </p>
-                                </CardContent>
-                            </Card>
-
-                            <Card className="overflow-hidden">
-                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-sm font-medium">Average Match</CardTitle>
-                                    <Target size={24} className="text-green-500 shrink-0" />
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="text-2xl font-bold">{data?.stats?.averageScore}%</div>
-                                    <Progress value={data?.stats?.averageScore} className="mt-2" />
-                                </CardContent>
-                            </Card>
-
-                            <Card className="overflow-hidden">
-                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-sm font-medium">Strong Matches</CardTitle>
-                                    <PiMedalFill size={24} className="text-yellow-500 shrink-0" />
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="text-2xl font-bold">{data?.stats?.strongMatches}</div>
-                                    <p className="text-xs text-muted-foreground truncate">
-                                        Candidates with {'>'}80% match
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        </div> */}
-                        
-
                         {/* Job Descriptions Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {data?.content?.map((job) => (
