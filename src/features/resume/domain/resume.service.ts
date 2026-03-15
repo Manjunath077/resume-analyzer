@@ -1,4 +1,4 @@
-import { bucket } from "@/lib/gcp/storage";
+import { getBucket } from "@/lib/gcp/storage";
 import { ResumeRepository } from "@/features/resume/domain/resume.repository";
 
 export class ResumeService {
@@ -7,7 +7,7 @@ export class ResumeService {
     ) { }
 
     async deleteResume(resumeId: string, userId: string) {
-        // 1️⃣ Check if resume exists and belongs to user
+        const bucket = getBucket();
         const resume = await this.resumeRepository.findByIdAndUser(
             resumeId,
             userId
@@ -42,6 +42,7 @@ export class ResumeService {
             skills: string[];
         }
     ): Promise<boolean> {
+        const bucket = getBucket();
         const resume = await this.resumeRepository.findPendingByFileKey(
             fileKey,
             userId
@@ -70,6 +71,7 @@ export class ResumeService {
         userId: string,
         resumes: { fileKey: string; candidateName: string }[]
     ) {
+        const bucket = getBucket();
         const results = [];
 
         for (const resume of resumes) {
