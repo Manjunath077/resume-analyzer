@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { bucket } from "@/lib/gcp/storage";
+import { getBucket } from "@/lib/gcp/storage";
 import { v4 as uuidv4 } from "uuid";
 import { getToken } from "next-auth/jwt";
 import clientPromise from "@/lib/db/mongodb";
@@ -35,6 +35,7 @@ const MAX_FILES = 10;
 
 export async function POST(req: NextRequest) {
   try {
+    const bucket = getBucket();
     const token = await getToken({
       req,
       secret: process.env.NEXTAUTH_SECRET,
