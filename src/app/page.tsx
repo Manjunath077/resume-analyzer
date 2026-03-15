@@ -9,6 +9,7 @@ import {
     StepCard
 } from "@/features/landing";
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
@@ -172,11 +173,14 @@ export default function HomePage() {
             <footer className="border-t border-gray-200 py-8 px-6 flex flex-col md:flex-row items-center justify-between gap-4">
 
                 <div className="flex items-center gap-2 font-extrabold text-xl">
-                    <div
-                        className="w-2 h-2 rounded-full"
-                        style={{ background: 'var(--foreground)' }}
+                    <Image
+                        src="/resume-analyzer-logo.png"
+                        alt="Resume Analyzer Logo"
+                        width={160}
+                        height={160}
+                        className="object-contain"
+                        priority
                     />
-                    <span style={{ color: 'var(--foreground)' }}>Resume Analyzer</span>
                 </div>
 
                 <p className="text-xs text-gray-500">

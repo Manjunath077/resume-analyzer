@@ -1,6 +1,7 @@
 'use client';
 
 import GoogleSignInButton from "@/features/auth/ui/components/GoogleSignInButton";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -14,19 +15,14 @@ const Navbar = () => {
 
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
-                <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center"
-                    style={{ background: 'var(--foreground)' }}
-                >
-                    <span className="text-white font-bold text-lg">R</span>
-                </div>
-
-                <span
-                    className="font-bold text-xl hidden sm:block"
-                    style={{ color: 'var(--foreground)' }}
-                >
-                    Resume Analyzer
-                </span>
+                <Image
+                    src="/resume-analyzer-logo.png"
+                    alt="Resume Analyzer Logo"
+                    width={160}
+                    height={160}
+                    className="object-contain"
+                    priority
+                />
             </Link>
 
             {/* Navigation Links (ONLY on landing page) */}
