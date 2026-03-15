@@ -10,6 +10,7 @@ import {
 } from "@/features/landing";
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
@@ -181,6 +182,19 @@ export default function HomePage() {
                         className="h-10 w-auto"
                         priority
                     />
+                </div>
+
+                {/* Middle Links */}
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <Link href="/privacy" className="hover:underline">
+                        Privacy Policy
+                    </Link>
+
+                    <span>|</span>
+
+                    <Link href="/terms" className="hover:underline">
+                        Terms of Service
+                    </Link>
                 </div>
 
                 <p className="text-xs text-gray-500">
